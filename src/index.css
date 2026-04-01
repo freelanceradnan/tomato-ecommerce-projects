@@ -1,0 +1,22 @@
+@import "tailwindcss";
+
+@theme {
+  --color-tomato: tomato;
+}
+
+@layer base {
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Outfit", sans-serif;
+  }
+  body {
+    min-height: 100vh;
+  }
+}
+
+.app {
+  width: 85%;
+  margin: 0 auto;
+}
