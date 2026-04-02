@@ -6,8 +6,8 @@ const Exploremenu = ({setCategory,categroy}) => {
     
     return (
         <div className='flex flex-col gap-3' id='explore-menu'> 
-        <h2 className='text-[#262626] text-3xl font-medium'>Explore our menu</h2>
-        <p className='max-w-[60%] text-[#747474] text-[max(1.4vw,16px)]' style={{columns:"#808080"}}>Choose from a diverse menu featuring a deleteable array of meal.</p>
+        <h2 className='text-[#262626] text-3xl font-medium mt-5'>Explore our menu</h2>
+        <p className='max-w-[60%] text-[#747474] text-[max(1.4vw,14px)]' style={{columns:"#808080"}}>Choose from a diverse menu featuring a deleteable array of meal.</p>
         <div className="h-40 flex justify-between items-center gap-10 text-center m-5 no-scrollbar" style={{overflowX:"scroll",overflowY:"hidden"}}>
         {menu_list.map((item,index)=>{
         return(
