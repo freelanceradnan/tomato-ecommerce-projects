@@ -19,4 +19,28 @@
 .app {
   width: 85%;
   margin: 0 auto;
+  
+}
+/* animation */
+@keyframes fadeIn{
+  0%{
+    opacity: 0;
+  }
+  100%{
+    opacity: 1;
+  }
+}
+.no-scrollbar::-webkit-scrollbar {
+    display: none;
+}
+.no-scrollbar{
+  -ms-overflow-style: none; 
+    scrollbar-width: none;
+}
+.food-grid{
+  display: grid;
+  grid-template-columns: repeat(auto-fill,minmax(240px,1fr));
+  margin-top: 30px;
+  gap:30px;
+  row-gap: 50px;
 }
