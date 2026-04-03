@@ -1,7 +1,7 @@
 import { X } from "lucide-react";
 import React, { useState } from "react";
 import { auth } from "../../Firebase/Firebase";
-import { createUserWithEmailAndPassword } from "firebase/auth";
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
 import { useNavigate } from "react-router";
 const SignModal = ({ setModal, modal }) => {
   const navigate=useNavigate()
@@ -14,13 +14,70 @@ const SignModal = ({ setModal, modal }) => {
   const [loadingSign,setLoadingSign]=useState(false)
   const [errorSign,setErrorSign]=useState("")
   const [checked,setChecked]=useState(false)
+  const [loadingLogin,setLoadingLogin]=useState(false)
+  const [errorlogin,setErrorLogin]=useState("")
+
+  //login
+  const [userlogin,setUserLogin]=useState({
+    email:"",
+    password:""
+  })
+  const changeLoginHandler=(e)=>{
+    setUserLogin({...userlogin,[e.target.name]:e.target.value})
+    if(errorlogin){
+      setErrorLogin("")
+    }
+  }
+  const SubmitLogin=async(e)=>{
+    e.preventDefault()
+    setLoadingLogin(true)
+    try {
+     const result= await signInWithEmailAndPassword(auth,userlogin.email,userlogin.password)
+     if(result.user){
+      setLoadingLogin(false)
+      setErrorLogin("")
+      setModal(false)
+      navigate("/")
+      alert('success login')
+     }
+    } catch (error) {
+      setLoadingLogin(false)
+      const errorCode = error.code;
+
+    switch (errorCode) {
+      case 'auth/invalid-credential':
+        setErrorLogin("Invalid email or password. Please try again.");
+        break;
+      case 'auth/user-not-found':
+        setErrorLogin("No account found with this email.");
+        break;
+      case 'auth/wrong-password':
+        setErrorLogin("Incorrect password.");
+        break;
+      case 'auth/user-disabled':
+        setErrorLogin("This account has been disabled. Please contact support.");
+        break;
+      case 'auth/too-many-requests':
+        setErrorLogin("Too many failed attempts. Try again later or reset your password.");
+        break;
+      case 'auth/invalid-email':
+        setErrorLogin("The email address is not valid.");
+        break;
+      default:
+        setErrorLogin("Login failed. Please check your connection and try again.");
+        console.error("Login Error:", error.message);
+    }
+    }
+
+  }
+  //change singup handler
   const changeSignHandler=(e)=>{
     setSignUsers({...signUser,[e.target.name]:e.target.value})
     if (errorSign) {
     setErrorSign("");
   }
   }
-  
+  //singup user
  const singSubmit = async (e) => {
   e.preventDefault();
   setLoadingSign(true);
@@ -77,12 +134,15 @@ const SignModal = ({ setModal, modal }) => {
 
 
   {/* Registration Form */}
-  <form className="flex flex-col gap-4">
+  <form className="flex flex-col gap-4" onSubmit={SubmitLogin}>
     <div className="space-y-4">
       
       
       <div className="relative">
-        <input 
+        <input
+        name="email"
+        onChange={changeLoginHandler}
+        value={userlogin.email}
           type="email" 
           placeholder="Your Email" 
           className="w-full px-4 py-3 border border-gray-200 rounded-lg outline-none focus:border-tomato focus:ring-1 focus:ring-tomato transition-all text-sm bg-gray-50"
@@ -92,6 +152,9 @@ const SignModal = ({ setModal, modal }) => {
 
       <div className="relative">
         <input 
+        name="password"
+        value={userlogin.password}
+        onChange={changeLoginHandler}
           type="password" 
           placeholder="Password" 
           className="w-full px-4 py-3 border border-gray-200 rounded-lg outline-none focus:border-tomato focus:ring-1 focus:ring-tomato transition-all text-sm bg-gray-50"
@@ -99,14 +162,25 @@ const SignModal = ({ setModal, modal }) => {
         />
       </div>
     </div>
-
-    {/* CTA Button */}
-    <button 
+    <p className="font-semibold text-center text-red-500">
+      {errorlogin && <p>{errorlogin}</p>}
+    </p>
+   <div>
+    {loadingLogin && <button 
+      type="button" 
+      className="w-full bg-tomato text-white font-semibold py-3 rounded-lg hover:bg-[#e24b31] transition-all shadow-md active:scale-[0.98] mt-2"
+    >
+      Trying To LoggedIn ...
+    </button>}
+    {!loadingLogin && <button 
       type="submit" 
       className="w-full bg-tomato text-white font-semibold py-3 rounded-lg hover:bg-[#e24b31] transition-all shadow-md active:scale-[0.98] mt-2"
     >
-      Login Here
-    </button>
+      Login
+    </button>}
+   </div>
+    {/* CTA Button */}
+    
 
     {/* Bottom Links */}
     <div className="text-center mt-4">
