@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { auth } from "../../Firebase/Firebase";
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
 import { useNavigate } from "react-router";
+import { toast } from "react-toastify";
 const SignModal = ({ setModal, modal }) => {
   const navigate=useNavigate()
   const [currentPage, setCurrentPage] = useState("Signup");
@@ -22,6 +23,8 @@ const SignModal = ({ setModal, modal }) => {
     email:"",
     password:""
   })
+  //notify success for login toasts
+  
   const changeLoginHandler=(e)=>{
     setUserLogin({...userlogin,[e.target.name]:e.target.value})
     if(errorlogin){
@@ -34,41 +37,67 @@ const SignModal = ({ setModal, modal }) => {
     try {
      const result= await signInWithEmailAndPassword(auth,userlogin.email,userlogin.password)
      if(result.user){
+      toast.success('welcome back!', {
+  style: {
+    backgroundColor: '#ff8c00', 
+    color: '#ffffff'          
+  },
+  progressStyle: {
+    background: '#ffffff'     
+     }});
       setLoadingLogin(false)
       setErrorLogin("")
       setModal(false)
+      
       navigate("/")
-      alert('success login')
+      
      }
     } catch (error) {
-      setLoadingLogin(false)
-      const errorCode = error.code;
+  setLoadingLogin(false);
+  const errorCode = error.code;
+  let message = "";
 
-    switch (errorCode) {
-      case 'auth/invalid-credential':
-        setErrorLogin("Invalid email or password. Please try again.");
-        break;
-      case 'auth/user-not-found':
-        setErrorLogin("No account found with this email.");
-        break;
-      case 'auth/wrong-password':
-        setErrorLogin("Incorrect password.");
-        break;
-      case 'auth/user-disabled':
-        setErrorLogin("This account has been disabled. Please contact support.");
-        break;
-      case 'auth/too-many-requests':
-        setErrorLogin("Too many failed attempts. Try again later or reset your password.");
-        break;
-      case 'auth/invalid-email':
-        setErrorLogin("The email address is not valid.");
-        break;
-      default:
-        setErrorLogin("Login failed. Please check your connection and try again.");
-        console.error("Login Error:", error.message);
-    }
-    }
+  switch (errorCode) {
+    case 'auth/invalid-credential':
+      message = "Invalid email or password. Please try again.";
+      break;
+    case 'auth/user-not-found':
+      message = "No account found with this email.";
+      break;
+    case 'auth/wrong-password':
+      message = "Incorrect password.";
+      break;
+    case 'auth/too-many-requests':
+      message = "Too many failed attempts. Try again later.";
+      break;
+    case 'auth/invalid-email':
+      message = "The email address is not valid.";
+      break;
+    default:
+      message = "Login failed. Please try again.";
+  }
 
+ 
+  setErrorLogin(message);
+
+  
+  toast.error(message, {
+    style: {
+      backgroundColor: '#ff8c00',
+      color: '#ffffff'
+    },
+    progressStyle: {
+      background: '#ffffff'
+    }
+  });
+
+
+;
+    }
+    setUserLogin({
+      email:"",
+      password:""
+    })
   }
   //change singup handler
   const changeSignHandler=(e)=>{
@@ -86,34 +115,47 @@ const SignModal = ({ setModal, modal }) => {
   try {
    
     await createUserWithEmailAndPassword(auth, signUser.email, signUser.password);
-  setLoadingSign(false);
+  toast.success('Signup Successfully!', {
+  style: {
+    backgroundColor: '#ff8c00', 
+    color: '#ffffff'          
+  },
+  progressStyle: {
+    background: '#ffffff'     
+     }});
+    setLoadingSign(false);
   setModal(false)
     navigate("/");
-    alert('success')
+    
 
   } catch (error) {
-    
-    setLoadingSign(false);
-    
-   
-  
-
+    setLoadingSign(false)
     const errorCode = error.code;
-
+    let message=""
     switch (errorCode) {
       case 'auth/email-already-in-use':
-        setErrorSign("This email is already registered. Try logging in instead.");
+        message="This email is already registered. Try logging in instead.";
         break;
       case 'auth/weak-password':
-        setErrorSign("Your password is too weak. Please use at least 6 characters.");
+        message="Your password is too weak. Please use at least 6 characters.";
         break;
       case 'auth/invalid-email':
-        setErrorSign("That email address doesn't look right.");
+        message="That email address doesn't look right.";
         break;
       default:
         
-        setErrorSign("An unexpected error occurred. Please try again.");
+        message="An unexpected error occurred. Please try again.";
     }
+    setErrorSign(message)
+    toast.error(message,{
+  style: {
+    backgroundColor: '#ff8c00', 
+    color: '#ffffff'          
+  },
+  progressStyle: {
+    background: '#ffffff'     
+     }})
+   
   }
   setSignUsers({
     name:"",
