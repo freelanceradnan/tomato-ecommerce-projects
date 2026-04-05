@@ -4,7 +4,7 @@ import { Link } from 'react-router';
 
 const Footer = () => {
     return (
-        <div className="text-[#d9d9d9] bg-[#323232] md:mt-20 mt-10"id='contactUs'>
+        <div className="text-[#d9d9d9] bg-[#323232] "id='contactUs'>
          <div className="w-[85%] md:grid md:gap-20 mx-auto py-8 flex flex-col gap-10" style={{gridTemplateColumns:"2fr 1fr 1fr"}}>
          <div className="flex flex-col gap-4">
         <Link to="/"><img src={assets.logo} alt="" className='w-30'/></Link>

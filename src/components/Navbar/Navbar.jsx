@@ -9,9 +9,17 @@ import { Menu as HeadlessMenu, MenuButton, MenuItem, MenuItems,Menu } from '@hea
 import { auth } from '../../Firebase/Firebase';
 import { signOut } from 'firebase/auth';
 import { NavHashLink } from 'react-router-hash-link';
-import { useLocation } from 'react-router';
+import { Navigate, Outlet, useLocation, useNavigate } from 'react-router';
 const Navbar = () => {
-
+  const navigate=useNavigate()
+ const {currentUser}=useContext(StoreContext)
+const handlerLogout=()=>{
+  signOut(auth)
+  .then(()=>{
+    navigate("/")
+  })
+  .catch((error)=>console.log(error))
+}
  const [isOpen, setIsOpen] = useState(false);
   
   const {isLogin,
@@ -107,7 +115,7 @@ const Navbar = () => {
                   </a>
                 </MenuItem>
                 <MenuItem>
-                  <button onClick={()=>signOut(auth)}>
+                  <button onClick={handlerLogout}>
                     <a
                     href="#"
                     className="block px-4 py-2 text-sm text-gray-700 data-focus:bg-gray-100 data-focus:outline-hidden"
