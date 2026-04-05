@@ -1,20 +1,39 @@
-import React, { useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
+
 import { Link } from 'react-router-dom';
-import { ShoppingBag, User, Menu, X, Search } from 'lucide-react'; 
+import { ShoppingBag, User, X, Search, MenuIcon, LogOut } from 'lucide-react'; 
 import { assets } from '../../assets/assets';
 import SignModal from '../SignModal/SignModal';
-
+import { StoreContext, useAuth } from '../../contexts/StoreContext';
+import { Menu as HeadlessMenu, MenuButton, MenuItem, MenuItems,Menu } from '@headlessui/react';
+import { auth } from '../../Firebase/Firebase';
+import { signOut } from 'firebase/auth';
+import { NavHashLink } from 'react-router-hash-link';
+import { useLocation } from 'react-router';
 const Navbar = () => {
+
+ const [isOpen, setIsOpen] = useState(false);
+  
+  const {isLogin,
+       isLoading,
+       role,}=useContext(StoreContext)
   const [modal,setModal]=useState(false)
-  const [isOpen, setIsOpen] = useState(false);
+  const [isSingupPage,setIsSignup]=useState(false)
+  useEffect(() => {
+   
+    setIsOpen(false);
+    
+  }, [location.pathname]);
+ 
   const [navSelect, setNavSelect] = useState('Home');
   const [close,setClose]=useState(false)
+ 
 
   const menuItems = [
-    { name: 'Home', label: 'Home', to: '#home' },
-    { name: 'Menu', label: 'Menu', to: '#menu' },
-    { name: 'Mobile-App', label: 'Mobile-App', to: '#mobileApp' },
-    { name: 'Contact-us', label: 'Contact-us', to: '#contactUs' }
+    { name: 'Home', label: 'Home', to: '/#home' },
+    { name: 'Menu', label: 'Menu', to: '/#menu' },
+    { name: 'Mobile-App', label: 'Mobile-App', to: '/#mobileApp' },
+    { name: 'Contact-us', label: 'Contact-us', to: '/#contactUs' }
     
   ];
 
@@ -58,12 +77,54 @@ const Navbar = () => {
                 3
               </span>
             </Link>
-         
+      {/* profile icon /singup button */}
+            {isLogin && role==='user'?
+            <Menu as="div" className="hidden md:block relative ml-3">
+              <MenuButton className="relative flex rounded-full focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500">
+                <span className="absolute -inset-1.5" />
+                <span className="sr-only">Open user menu</span>
+                <User/>
+              </MenuButton>
+
+              <MenuItems
+                transition
+                className="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg outline outline-black/5 transition data-closed:scale-95 data-closed:transform data-closed:opacity-0 data-enter:duration-100 data-enter:ease-out data-leave:duration-75 data-leave:ease-in"
+              >
+                <MenuItem>
+                  <a
+                    href="/myDashboard"
+                    className="block px-4 py-2 text-sm text-gray-700 data-focus:bg-gray-100 data-focus:outline-hidden"
+                  >
+                    My Dashboard
+                  </a>
+                </MenuItem>
+                <MenuItem>
+                  <a
+                    href="#"
+                    className="block px-4 py-2 text-sm text-gray-700 data-focus:bg-gray-100 data-focus:outline-hidden"
+                  >
+                    Settings
+                  </a>
+                </MenuItem>
+                <MenuItem>
+                  <button onClick={()=>signOut(auth)}>
+                    <a
+                    href="#"
+                    className="block px-4 py-2 text-sm text-gray-700 data-focus:bg-gray-100 data-focus:outline-hidden"
+                  >
+                    Sign out
+                  </a>
+                  </button>
+                </MenuItem>
+              </MenuItems>
+            </Menu>
+            :
             <button className='hidden md:block border px-3 py-1 text-gray-600 hover:bg-tomato hover:border hover:border-tomato hover:text-white text-sm' style={{borderRadius:"50px"}} onClick={() => setModal(prev => !prev)}>sign in</button>
+            }
             {/* Mobile Menu Button */}
             <div className="md:hidden flex items-center">
               <button onClick={() => setIsOpen(!isOpen)} className="text-gray-600">
-                {isOpen ? <X size={24} /> : <Menu size={24} />}
+                {isOpen ? <X size={24} /> : <MenuIcon size={24} />}
               </button>
             </div>
           </div>
@@ -72,22 +133,41 @@ const Navbar = () => {
 
       {/* 4. Mobile Menu Drawer */}
       {isOpen && (
-        <div className="md:hidden bg-white border-t border-gray-100 px-4 pt-2 pb-6 space-y-1 transition-all">
+        <div className="md:hidden bg-white border-t border-gray-100 px-4 pt-2 pb-6 space-y-1 transition-all ">
           {menuItems.map((item) => (
-            <Link
+            <a
               key={item.name}
-              to={item.to}
+              href={item.to}
               onClick={() => {
                 setNavSelect(item.name);
                 setIsOpen(false);
               }}
-              className="block px-3 py-2 text-base font-medium text-[#49557e] hover:bg-gray-50 hover:text-tomato rounded-md"
+              className="block px-3 py-2 text-base font-medium text-[#49557e] hover:bg-gray-200 hover:text-tomato rounded-md "
             >
               {item.label}
-            </Link>
+            </a>
             
           ))}
-          <Link className="block px-3 py-2 text-base font-medium text-[#49557e] hover:bg-gray-50 hover:text-tomato rounded-md">Sing in</Link>
+          {
+            isLogin && role==='user'?
+            (
+              <>
+              <Link to="/myDashboard" className="block px-3 py-2 text-base font-medium text-[#49557e] hover:bg-gray-50 hover:text-tomato rounded-md hover:bg-gray-200 py-2" onClick={()=> setIsOpen(false)}>My Dashboard</Link>
+              <button className='w-full flex items-center justify-center hover:bg-gray-200 py-2 hover:text-tomato' onClick={()=>signOut(auth)}>
+                <LogOut />
+                <span>Sign Out</span>
+                </button>
+              </>
+             
+            )
+            
+            :
+            <>
+            <Link className="block px-3 py-2 text-base font-medium text-[#49557e] hover:bg-gray-50 hover:text-tomato rounded-md" to="/signup" 
+            onClick={()=>setIsOpen(false)}>Signup</Link>
+           
+            </>
+          }
           
         </div>
       )}

@@ -1,12 +1,14 @@
-import { X } from "lucide-react";
-import React, { useState } from "react";
-import { auth,db } from "../../Firebase/Firebase";
-import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
-import { useNavigate } from "react-router";
-import { toast } from "react-toastify";
-import { doc, setDoc } from "firebase/firestore";
-const SignModal = ({ setModal, modal }) => {
-  const navigate=useNavigate()
+import React, { useState } from 'react';
+import Navbar from '../../components/Navbar/Navbar';
+import { useNavigate } from 'react-router';
+import { toast } from 'react-toastify';
+import { auth, db } from '../../Firebase/Firebase';
+import { doc, setDoc } from 'firebase/firestore';
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'firebase/auth';
+
+
+const Signup = () => {
+     const navigate=useNavigate()
   const [currentPage, setCurrentPage] = useState("Signup");
   const [signUser,setSignUsers]=useState({
     name:"",
@@ -48,13 +50,13 @@ const SignModal = ({ setModal, modal }) => {
      }});
       setLoadingLogin(false)
       setErrorLogin("")
-      setModal(false)
       
       navigate("/")
       
      }
     } catch (error) {
   setLoadingLogin(false);
+
   const errorCode = error.code;
   let message = "";
 
@@ -79,7 +81,7 @@ const SignModal = ({ setModal, modal }) => {
   }
 
  
-  setErrorLogin(message);
+  setErrorLogin(errorCode);
 
   
   toast.error(message, {
@@ -108,76 +110,54 @@ const SignModal = ({ setModal, modal }) => {
   }
   }
   //singup user
- const singSubmit = async (e) => {
+const singSubmit = async (e) => {
   e.preventDefault();
   setLoadingSign(true);
   setErrorSign("");
 
   try {
-   
-    await createUserWithEmailAndPassword(auth, signUser.email, signUser.password);
-    
-    if(auth.currentUser){
-      await setDoc(doc(db,'users',auth.currentUser.uid),{
-        email:signUser.email,
-        role:"user",
+    // 1. Auth Creation
+    // Make sure 'signUser' matches your useState variable name!
+    const useCredential = await createUserWithEmailAndPassword(auth, signUser.email, signUser.password);
+    const user = useCredential.user;
+
+    // 2. Firestore Write
+    if (user) {
+      // Use 'user.uid' instead of 'auth.currentUser.uid' (safer)
+      await setDoc(doc(db, 'users', user.uid), {
+        email: user.email, // Use the email from the auth response
+        role: "user",
         name:signUser.name
-      })
+      });
     }
-  toast.success('Signup Successfully!', {
-  style: {
-    backgroundColor: '#ff8c00', 
-    color: '#ffffff'          
-  },
-  progressStyle: {
-    background: '#ffffff'     
-     }});
+
+    toast.success('Signup Successfully!');
     setLoadingSign(false);
-  setModal(false)
+   
     navigate("/");
-    
 
   } catch (error) {
-    setLoadingSign(false)
-    const errorCode = error.code;
-    let message=""
-    switch (errorCode) {
-      case 'auth/email-already-in-use':
-        message="This email is already registered. Try logging in instead.";
-        break;
-      case 'auth/weak-password':
-        message="Your password is too weak. Please use at least 6 characters.";
-        break;
-      case 'auth/invalid-email':
-        message="That email address doesn't look right.";
-        break;
-      default:
-        
-        message="An unexpected error occurred. Please try again.";
-    }
-    setErrorSign(message)
-    toast.error(message,{
-  style: {
-    backgroundColor: '#ff8c00', 
-    color: '#ffffff'          
-  },
-  progressStyle: {
-    background: '#ffffff'     
-     }})
-   
+    setLoadingSign(false);
+    console.error("Full Error Object:", error);
+    setErrorSign(error.message);
+    
+    toast.error("Error: " + error.code);
   }
+
+  // Ensure this matches your useState setter (signUser vs signUsers)
   setSignUsers({
-    name:"",
-    email:"",
-    password:""
-  })
+    name: "",
+    email: "",
+    password: ""
+  });
 };
-  return (
-    <div className="fixed inset-0 z-50 bg-orange-500/10 backdrop-blur-sm w-full h-screen flex items-center justify-center">
+    return (
+    
+        <div className="z-50 bg-orange-500/10 backdrop-blur-sm w-full h-screen flex items-center justify-center">
       <div className="bg-white p-6 rounded-lg md:w-2/5">
         <div className="flex justify-between">
           <div>{currentPage==='Login'?"Login":"Register Now"}</div>
-          <button onClick={() => setModal(!modal)}>X</button>
+          
         </div>
         {/* conditionally login or signin page */}
         {currentPage === "Login" ? (
@@ -331,7 +311,7 @@ const SignModal = ({ setModal, modal }) => {
         )}
       </div>
     </div>
-  );
+    );
 };
 
-export default SignModal;
+export default Signup;
