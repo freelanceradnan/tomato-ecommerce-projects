@@ -5,11 +5,11 @@ import "react-datepicker/dist/react-datepicker.css";
 import { doc, getDoc, setDoc, updateDoc } from 'firebase/firestore';
 import { auth, db } from '../../Firebase/Firebase';
 import { onAuthStateChanged } from 'firebase/auth';
-
+import { toast } from 'react-toastify';
 const MyProfile = () => {
     const {currentUser}=useContext(StoreContext)
     const [editMode,setEditMode]=useState(false)
-    
+    const [originalData,setOriginalData]=useState(null)
     const [userData,setUserData]=useState({
       name:"",
     
@@ -32,6 +32,7 @@ try {
   const datasnap=await getDoc(docRef)
   if(datasnap.exists()){
     setUserData(datasnap.data())
+    setOriginalData(datasnap.data())
   }
   else{
     console.log('no data availble on store')
@@ -42,7 +43,10 @@ try {
 }
 return ()=>onAuthStateChanged(auth,intializer)
 },[])
-  console.log(userData)
+const handlerCancel=()=>{
+setUserData(originalData)
+setEditMode(false)
+}
 //update data
 const submitHandler = async (e) => {
         e.preventDefault();
@@ -51,14 +55,22 @@ const submitHandler = async (e) => {
             await updateDoc(docRef, {
                 ...userData 
             });
-            alert('update success');
+           toast.success('Update Success!', {
+             style: {
+               backgroundColor: '#ff8c00', 
+               color: '#ffffff'          
+             },
+             progressStyle: {
+               background: '#ffffff'     
+                }});
             setEditMode(false); 
         } catch (error) {
             alert("Failed to update: " + error.message);
         }
     };
+    console.log(editMode)
     return (
-        <div className='md:max-w-3xl mx-auto'>
+        <div className='w-full max-w-full md:max-w-4xl mx-auto bg-[#F9F9F9] md:p-6 min-h-screen' > 
         <h2 className='text-xl font-semibold md:text-xl'>Welcome {currentUser?.email.split('@')[0]}!</h2>
         <form action="" className=' mt-2' onSubmit={submitHandler}>
         <div className='flex justify-between'>
@@ -68,16 +80,17 @@ const submitHandler = async (e) => {
         </div>
        
         </div>
-       <div className='flex justify-between items-center'>
-         <div className='font-bold py-4 uppercase'>| Personal Information</div><button type="button" className='bg-black text-white h-8 px-4' onClick={()=>setEditMode(true)}>EDIT</button>
+       <div className='flex justify-between items-center bg-[#FFFFFF] border-b-1 border-[#F9F9F9]'>
+         <div className='font-bold py-4 uppercase'>| Personal Information</div>
+         {!editMode&& <button type="button" className='bg-black text-white h-8 px-4' onClick={()=>setEditMode(true)}>EDIT</button>}
        </div>
         {/* //input fields */}
-        <div className='grid md:grid-cols-2 mt-4 gap-2'>
+        <div className='grid md:grid-cols-2 mt-4 gap-2 bg-[#FFFFFF]'>
        <div className=''>
         <div>
              <label htmlFor="name" className='text-[#807f83]'>Name*</label>
         </div>
-        {editMode? <input type="text" name="name" id="name" onChange={changeHandler} value={userData?.name} className='border border-[#a5a5a8] outline-none w-2/3' />:<h2>{userData?.name}</h2>}
+        {editMode? <input type="text" name="name" id="name" onChange={changeHandler} value={userData?.name} className='w-full border border-gray-300 p-2 outline-none' />:<h2>{userData?.name}</h2>}
        </div>
         <div>
          <div> <label htmlFor="email" className='text-[#807f83]'>Email*</label></div>
@@ -87,14 +100,14 @@ const submitHandler = async (e) => {
         </div>
         <div>
          <div><label htmlFor="number" className='text-[#807f83]'>Mobile No*</label></div>
-        {editMode?  <input type="number" name="number" id="number" onChange={changeHandler} className='border border-[#a5a5a8] outline-none w-2/3' value={userData?.number}/>:<h2>{userData?.number||<p>No Number found</p>}</h2>}
+        {editMode?  <input type="number" name="number" id="number" onChange={changeHandler} className='w-full border border-gray-300 p-2 outline-none' value={userData?.number}/>:<h2>{userData?.number||<p>No Number found</p>}</h2>}
         </div>
         <div>
         <div>
              <label htmlFor="gender" className='text-[#807f83]'>Gender*</label>
         </div>
 {editMode? 
-<select name="gender" required className='border border-[#a5a5a8] outline-none w-2/3 py-1' value={userData?.gender?.[0] || ""} onChange={changeHandler}>
+<select name="gender" required className='w-full border border-gray-300 p-2 outline-none' value={userData?.gender?.[0] || ""} onChange={changeHandler}>
   <option value="" selected>Select Gender</option> 
   <option value="male">Male</option>
   <option value="female">Female</option>
@@ -110,7 +123,7 @@ const submitHandler = async (e) => {
            </div>
           {editMode?
  <DatePicker 
-                                selected={userData?.date ? new Date(userData.date.split('/').reverse().join('-')) : null}
+                                selected={userData?.date ? new Date(userData.date.split('/').reverse().join('-')) : null} 
                                 onChange={(date) => {
                                     if(date){
                                         const formattedDate = date.toLocaleDateString('en-GB');
@@ -118,8 +131,8 @@ const submitHandler = async (e) => {
                                     }
                                 }}
                                 dateFormat="dd/MM/yyyy"
-                                wrapperClassName="w-full"
-                                className="w-full border border-[#a5a5a8] py-1.5 px-2 outline-none"
+                                wrapperClassName="w-50 md:w-full"
+                                className="w-full border border-gray-300 p-2 outline-none"
                                 showMonthDropdown
                                 showYearDropdown
                                 dropdownMode="select"
@@ -131,10 +144,10 @@ const submitHandler = async (e) => {
         </div>
          
         </div>
-        <div className='mt-4 flex flex-row gap-2'>
+        <div className='mt-4 flex flex-row gap-2 bg-[#FFFFFF]'>
         {editMode && <>
           <button className='border uppercase text-white bg-black p-2 hover:bg-orange-400 font-semibold w-30 ' type='submit'>Save</button>
-         <button type="button" className='border uppercase text-black bg-white p-2 hover:bg-black font-semibold w-30 hover:text-white' onClick={()=>setEditMode(false)}>Cancel</button>
+         <button type="button" className='border uppercase text-black bg-white p-2 hover:bg-black font-semibold w-30 hover:text-white' onClick={handlerCancel}>Cancel</button>
         </>}
         </div>
         </form>

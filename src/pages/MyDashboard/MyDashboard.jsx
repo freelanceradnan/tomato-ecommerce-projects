@@ -8,7 +8,7 @@ import Navbar from '../../components/Navbar/Navbar';
 import Footer from '../Footer/Footer';
 
 const MyDashboard = () => {
-   const [active,isActive]=useState("myProfile")
+   const [active,isActive]=useState("")
    const [hiddenText,setHiddenText]=useState(false)
     const {currentUser}=useContext(StoreContext)
     //hidden bar automatic
@@ -33,7 +33,7 @@ const MyDashboard = () => {
         backgroundColor: "#0F172A", 
         color: "white", 
         
-      }} className='max-w-30 md:max-w-60 p-2 md:p-5'>
+      }} className='max-w-30 md:max-w-60 p-0 md:p-5'>
         
         <ul style={{ listStyle: "none", padding: 0 }} className='flex flex-col gap-3'>
           <button>
@@ -41,7 +41,7 @@ const MyDashboard = () => {
               <ChevronRight onClick={()=>setHiddenText(!hiddenText)}/>
             </abbr>
           </button>
-          <li className={active==="myProfile"?"bg-[#FF6347]":'hover:bg-[#FF6347] text-[#CBD5E1]'} onClick={()=>isActive("myProfile")}><Link to="/myDashboard/" style={{ color: "white" }} className='flex gap-1 md:gap-2 items-center'>
+          <li className={active==="myDashboard"?"bg-[#FF6347]":'hover:bg-[#FF6347] text-[#CBD5E1]'} onClick={()=>isActive("myProfile")}><Link to="/myDashboard/" style={{ color: "white" }} className='flex gap-1 md:gap-2 items-center'>
           <abbr title="profile">
            <UserRoundPen />
           </abbr>
