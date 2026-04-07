@@ -26,6 +26,7 @@ const submitHandler = async (e) => {
 
     const formData = new FormData();
     formData.append("access_key", "c586bfa8-e5bc-4ca5-bbb7-3f17ac859726");
+    //all data
     formData.append("emoji_feedback", data.emoji);
     formData.append("rating_number", data.number);
     formData.append("best_feature", data.text);
