@@ -5,7 +5,7 @@ const Policies = () => {
         <div className='w-full max-w-full md:max-w-4xl mx-auto bg-[#F9F9F9] md:p-6 min-h-screen'>
         <h2 className='font-semibold text-2xl'>Privacy and Confidentiality</h2>
 
-        {/* //grid */}
+        {/* //grida */}
         <div className='flex flex-col gap-6'>
 
         <div>
