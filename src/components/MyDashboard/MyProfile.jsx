@@ -68,7 +68,7 @@ const submitHandler = async (e) => {
             alert("Failed to update: " + error.message);
         }
     };
-    console.log(editMode)
+    // console.log(editMode)
     return (
         <div className='w-full max-w-full md:max-w-4xl mx-auto bg-[#F9F9F9] md:p-6 min-h-screen' > 
         <h2 className='text-xl font-semibold md:text-xl'>Welcome {currentUser?.email.split('@')[0]}!</h2>
@@ -95,7 +95,7 @@ const submitHandler = async (e) => {
         <div>
          <div> <label htmlFor="email" className='text-[#807f83]'>Email*</label></div>
          
-         <h2 >{userData?.email||<p>No Email found</p>}<h3 className='text-gray-400'>[Read Only]</h3></h2>
+         <div>{userData?.email||<p>No Email found</p>}<h2 className='text-gray-400'>[Read Only]</h2></div>
          
         </div>
         <div>

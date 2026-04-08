@@ -13,6 +13,12 @@ import Order from "../components/MyDashboard/Order";
 import Feedback from "../components/MyDashboard/Feedback";
 import Chat from "../components/MyDashboard/Chat";
 import Policies from "../components/MyDashboard/Policies";
+import AdminPage from "../pages/Admin/AdminPage";
+import Dashboard from "../components/AdminPages/Dashboard";
+import Inventory from "../components/AdminPages/Inventory";
+import AddProduct from "../components/AdminPages/AddProduct";
+import User from "../components/AdminPages/User";
+import Settings from "../components/AdminPages/Settings";
 
 export const Router=createBrowserRouter([
     {path:"/",element:<Rootlayout/>,children:([
@@ -29,5 +35,15 @@ export const Router=createBrowserRouter([
         {path:"policies",index:false,element:<Policies/>}
     ])},
     {path:"/placeOrder",index:true,element:<Placeholder/>},
+    {path:"/admin-dashboard",element:<AdminPage/>,
+    children:([
+        {path:"",index:true,element:<Dashboard/>},
+        {path:"inventory",element:<Inventory/>},
+        {path:"addProduct",element:<AddProduct/>},
+        {path:"orderMangement",element:<Order/>},
+        {path:"userManagement",element:<User/>},
+        {path:"settings",element:<Settings/>}
+    ])
+    },
     ])}
 ])

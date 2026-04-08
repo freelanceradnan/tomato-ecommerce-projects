@@ -59,7 +59,9 @@ const handlerLogout=()=>{
           </div>
 
 <div className="hidden md:flex space-x-8">
-  {menuItems.map((item) => (
+{isLogin && role==='admin'?"":
+
+  menuItems.map((item) => (
     <a
       key={item.name}
       href={item.to}
@@ -70,12 +72,16 @@ const handlerLogout=()=>{
     >
       {item.label}
     </a>
-  ))}
+  ))
+}
 </div>
 
           {/* 3. Utility Icons (Search, User, Cart) */}
           <div className="flex items-center space-x-4">
-            <button className="p-2 text-gray-600 hover:text-tomato">
+            {isLogin && role==='admin'?
+            ""
+          : <>
+          <button className="p-2 text-gray-600 hover:text-tomato">
               <Search size={20} />
             </button>
             
@@ -85,9 +91,14 @@ const handlerLogout=()=>{
                 3
               </span>
             </Link>
+          </>
+          }
+           
       {/* profile icon /singup button */}
-            {isLogin && role==='user'?
-            <Menu as="div" className="hidden md:block relative ml-3">
+            {isLogin && role?
+
+            isLogin && role=='user'? 
+            <Menu as="div" className="hidden md:block relative ml-3"> 
               <MenuButton className="relative flex rounded-full focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500">
                 <span className="absolute -inset-1.5" />
                 <span className="sr-only">Open user menu</span>
@@ -125,10 +136,49 @@ const handlerLogout=()=>{
                   </button>
                 </MenuItem>
               </MenuItems>
+            </Menu>:  <Menu as="div" className="hidden md:block relative ml-3"> 
+              <MenuButton className="relative flex rounded-full focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500">
+                <span className="absolute -inset-1.5" />
+                <span className="sr-only">Open user menu</span>
+                <User/>
+              </MenuButton>
+
+              <MenuItems
+                transition
+                className="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg outline outline-black/5 transition data-closed:scale-95 data-closed:transform data-closed:opacity-0 data-enter:duration-100 data-enter:ease-out data-leave:duration-75 data-leave:ease-in"
+              >
+                <MenuItem>
+                  <a
+                    href="/admin-dashboard"
+                    className="block px-4 py-2 text-sm text-gray-700 data-focus:bg-gray-100 data-focus:outline-hidden"
+                  >
+                    Admin Dashboard
+                  </a>
+                </MenuItem>
+                <MenuItem>
+                  <a
+                    href="#"
+                    className="block px-4 py-2 text-sm text-gray-700 data-focus:bg-gray-100 data-focus:outline-hidden"
+                  >
+                    Settings
+                  </a>
+                </MenuItem>
+                <MenuItem>
+                  <button onClick={handlerLogout}>
+                    <a
+                    href="#"
+                    className="block px-4 py-2 text-sm text-gray-700 data-focus:bg-gray-100 data-focus:outline-hidden"
+                  >
+                    Sign out
+                  </a>
+                  </button>
+                </MenuItem>
+              </MenuItems>
             </Menu>
             :
-            <button className='hidden md:block border px-3 py-1 text-gray-600 hover:bg-tomato hover:border hover:border-tomato hover:text-white text-sm' style={{borderRadius:"50px"}} onClick={() => setModal(prev => !prev)}>sign in</button>
+            <button className='hidden md:block border px-3 py-1 text-gray-600 hover:bg-tomato hover:border hover:border-tomato hover:text-white text-sm' style={{borderRadius:"50px"}} onClick={() => setModal(prev => !prev)}>sign in</button> 
             }
+          
             {/* Mobile Menu Button */}
             <div className="md:hidden flex items-center">
               <button onClick={() => setIsOpen(!isOpen)} className="text-gray-600">
@@ -142,7 +192,10 @@ const handlerLogout=()=>{
       {/* 4. Mobile Menu Drawer */}
       {isOpen && (
         <div className="md:hidden bg-white border-t border-gray-100 px-4 pt-2 pb-6 space-y-1 transition-all ">
-          {menuItems.map((item) => (
+          {isLogin && role==='admin'?
+          ""
+        :
+        menuItems.map((item) => (
             <a
               key={item.name}
               href={item.to}
@@ -155,12 +208,25 @@ const handlerLogout=()=>{
               {item.label}
             </a>
             
-          ))}
+          ))
+        }
           {
-            isLogin && role==='user'?
+            isLogin && role?
+            isLogin && role==='user'? 
             (
               <>
               <Link to="/myDashboard" className="block px-3 py-2 text-base font-medium text-[#49557e] hover:bg-gray-50 hover:text-tomato rounded-md hover:bg-gray-200 py-2" onClick={()=> setIsOpen(false)}>My Dashboard</Link>
+              <button className='w-full flex items-center justify-center hover:bg-gray-200 py-2 hover:text-tomato' onClick={()=>signOut(auth)}>
+                <LogOut />
+                <span>Sign Out</span>
+                </button>
+              </>
+             
+            )
+            :
+            (
+              <>
+              <Link to="/admin-dashboard" className="block px-3 py-2 text-base font-medium text-[#49557e] hover:bg-gray-50 hover:text-tomato rounded-md hover:bg-gray-200 py-2" onClick={()=> setIsOpen(false)}>Admin Dashboard</Link>
               <button className='w-full flex items-center justify-center hover:bg-gray-200 py-2 hover:text-tomato' onClick={()=>signOut(auth)}>
                 <LogOut />
                 <span>Sign Out</span>

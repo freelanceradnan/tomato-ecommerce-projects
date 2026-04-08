@@ -96,7 +96,7 @@ navigate("/")
           <h2 className="font-semibold">
             How would you rate the quality of our product?
           </h2>
-          <div className="flex gap-2">
+          <div className="flex md:gap-2">
             {[1,2,3,4,5].map((num)=>(
                 <button key={num} type="button" onClick={()=>handleFeedback("number",num.toString())} 
                 className={`px-4 py-2 rounded-full transition-all ${

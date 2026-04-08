@@ -1,25 +1,40 @@
-import React, { useState } from 'react';
-import { menu_list } from '../../assets/assets';
+import React from 'react';
 
-const Exploremenu = ({setCategory,categroy}) => {
-   
-    
+const Exploremenu = ({ handler, categories, activeCategory }) => {
     return (
         <div className='flex flex-col gap-3' id='menu'> 
-        <h2 className='text-[#262626] text-3xl font-medium mt-5'>Explore our menu</h2>
-        <p className='md:max-w-[60%] text-[#747474] text-[max(1.4vw,14px)]' style={{columns:"#808080"}}>Choose from a diverse menu featuring a deleteable array of meal.</p>
-        <div className="md:h-40 h-35 flex justify-between items-center gap-10 text-center md:m-5 no-scrollbar" style={{overflowX:"scroll",overflowY:"hidden"}}>
-        {menu_list.map((item,index)=>{
-        return(
-            <div key={index} className='' onClick={()=>setCategory(prev=>prev===item.menu_name?"All":item.menu_name)}>
-
-            <img src={item.menu_image} alt="" className={`w-[7.5vw] min-w-20 cursor-pointer rounded-[50%] transition:0.2s ${categroy===item.menu_name?'border-4 border-orange-600':''}`}/>
-            <p className='mt-2 h-0.5 border-none'>{item.menu_name}</p>
+            <h2 className='text-[#262626] text-3xl font-medium mt-5'>Explore our menu</h2>
+            <p className='md:max-w-[60%] text-[#747474] text-[max(1.4vw,14px)]'>
+                Choose from a diverse menu featuring a delectable array of meals.
+            </p>
+            
+            <div className="md:h-60 h-48 flex justify-between items-center gap-10 text-center md:m-5 no-scrollbar overflow-x-scroll overflow-y-hidden">
+                {categories.map((item) => {
+                    const isActive = activeCategory === item
+                    return (
+                        <div 
+                            key={item.id} 
+                            className='flex-shrink-0 cursor-pointer' 
+                            onClick={() => handler(item)}
+                        >
+                            <img 
+                                src={item.image} 
+                                alt={item.name}
+                                
+                                className={`w-20 h-20 md:w-32 md:h-32 object-cover rounded-full transition-all duration-300 border-4 ${
+                                    isActive ? "border-orange-500 p-1" : "border-transparent"
+                                }`} 
+                            />
+                            <p className={`mt-2 text-sm md:text-base transition-colors ${
+                                isActive ? "text-orange-600 font-semibold" : "text-[#747474]"
+                            }`}>
+                                {item.name}
+                            </p>
+                        </div>
+                    );
+                })}
             </div>
-        )
-        })}
-        </div>
-        <hr className='md:my-2 h-[2px] bg-white'/>
+            <hr className='md:my-2 h-[2px] bg-gray-100 border-none'/>
         </div>
     );
 };
