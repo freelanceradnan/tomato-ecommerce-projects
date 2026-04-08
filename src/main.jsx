@@ -7,9 +7,12 @@ import { Router } from './router/Router';
 import { StoreContextProvider } from './contexts/StoreContext';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { Provider } from 'react-redux';
+import { store } from './Feature/store';
 createRoot(document.getElementById('root')).render(
   <StrictMode>
-   <StoreContextProvider>
+   <Provider store={store}>
+    <StoreContextProvider>
      <ToastContainer 
       position="top-center"
       autoClose={1500}
@@ -20,5 +23,6 @@ createRoot(document.getElementById('root')).render(
    
    </RouterProvider>
    </StoreContextProvider>
+   </Provider>
   </StrictMode>,
 )
