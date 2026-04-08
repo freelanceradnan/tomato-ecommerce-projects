@@ -9,7 +9,7 @@ const AdminNav = () => {
             
             <ul className='flex flex-col gap-3'>
                 <li>
-                   
+                   {/* //admin */}
                     <NavLink to="/admin-dashboard" className="flex gap-2" end>
                         <span className="icon">
                             <House size={20}/>
