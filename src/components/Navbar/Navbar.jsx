@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react';
 
 import { Link } from 'react-router-dom';
-import { ShoppingBag, User, X, Search, MenuIcon, LogOut } from 'lucide-react'; 
+import { ShoppingBag, User, X, Search, MenuIcon, LogOut, CircleChevronRight } from 'lucide-react'; 
 import { assets } from '../../assets/assets';
 import SignModal from '../SignModal/SignModal';
 import { StoreContext, useAuth } from '../../contexts/StoreContext';
@@ -180,17 +180,23 @@ const handlerLogout=()=>{
             }
           
             {/* Mobile Menu Button */}
+           {isLogin && role==='admin'? 
+           ""
+           :
             <div className="md:hidden flex items-center">
               <button onClick={() => setIsOpen(!isOpen)} className="text-gray-600">
                 {isOpen ? <X size={24} /> : <MenuIcon size={24} />}
               </button>
             </div>
+           }
           </div>
         </div>
       </div>
 
       {/* 4. Mobile Menu Drawer */}
-      {isOpen && (
+      
+      {isLogin && role==='admin'?
+      isOpen && (
         <div className="md:hidden bg-white border-t border-gray-100 px-4 pt-2 pb-6 space-y-1 transition-all ">
           {isLogin && role==='admin'?
           ""
@@ -244,7 +250,11 @@ const handlerLogout=()=>{
           }
           
         </div>
-      )}
+      )
+      
+      :
+      
+      ""}
     </nav>
     {/* {modal} */}
     {modal && <SignModal modal={modal} setModal={setModal}/>}

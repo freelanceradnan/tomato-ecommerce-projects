@@ -25,6 +25,23 @@ export const ApiSlice=createApi({
          },
          providesTags:['products']
         }),
+        getAllUsers:builder.query({
+         async queryFn(){
+            try{
+                const docRef=collection(db,'users')
+                const docSnap=await getDocs(docRef)
+                const filteredData=docSnap.docs.map((doc)=>({
+                    id:doc.id,
+                    ...doc.data()
+                }))
+                return {data:filteredData,error:null}
+            }
+            catch(error){
+                return {error:"faild to fetch all data"}
+            }
+         },
+         providesTags:['products']
+        }),
         updateProduct:builder.mutation({
         async queryFn(id,updates){
             try {
@@ -86,4 +103,4 @@ export const ApiSlice=createApi({
         })
     })
 })
-export const {useAddProductMutation,useUpdateProductMutation,useGetAllPostsQuery,useGetCategoryQuery,useGetProductByCategoryQuery}=ApiSlice
+export const {useAddProductMutation,useUpdateProductMutation,useGetAllPostsQuery,useGetCategoryQuery,useGetProductByCategoryQuery,useGetAllUsersQuery}=ApiSlice
