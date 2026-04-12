@@ -1,10 +1,32 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { assets } from '../../assets/assets';
 import foodImg from '../../../src/assets/food_25.png';
 import { Pencil, Trash2 } from 'lucide-react';
+import { useGetAllPostsQuery } from '../../app/store';
+import InventoryItem from './InventoryItem';
+import { deleteDoc, doc } from 'firebase/firestore';
+import { db } from '../../Firebase/Firebase';
+import { Link } from 'react-router';
 
 const Inventory = () => {
+  const [products, setProducts] = useState([]); 
+  const {data:allProduct=[]}=useGetAllPostsQuery()
+   useEffect(() => {
   
+  if (allProduct.length > 0 && products.length === 0) {
+    setProducts(allProduct);
+  }
+}, [allProduct, products]);
+  
+const handleDelete = async(id) => {
+  try {
+    const delRef=doc(db,'products',id)
+    deleteDoc(delRef)
+    setProducts(prev => prev.filter(p => p.id !== id));
+  } catch (error) {
+    
+  }
+};
     return (
        <div className=''>
          <div className='max-w-full flex flex-col gap-4 overflow-hidden'>
@@ -14,7 +36,7 @@ const Inventory = () => {
                 <p className='text-2xl font-semibold'>Inventory</p>
                 <p className='text-sm'>Manage your product inventory</p>
             </div>
-            <button className='p-2 border rounded-sm bg-[#db6e4d] hover:bg-[#da4315] text-white font-semibold text-sm'>Add Product</button>
+           <Link to="/admin-dashboard/addProduct"> <button className='p-2 border rounded-sm bg-[#db6e4d] hover:bg-[#da4315] text-white font-semibold text-sm'>Add Product</button></Link>
         </div>
         {/* //search area */}
         <div className='md:flex justify-between'>
@@ -43,61 +65,9 @@ const Inventory = () => {
 
                         <tbody className="divide-y divide-gray-100">
                             {/* Example Row 1 */}
-                            <tr className="hover:bg-gray-50/50 transition-colors">
-                                <td className="px-6 py-4">
-                                    <img 
-                                        src={foodImg} 
-                                        alt="product" 
-                                        className="w-14 h-14 object-cover rounded-lg border border-gray-100 shadow-sm"
-                                    />
-                                </td>
-                                <td className="px-6 py-4 whitespace-nowrap">
-                                    <p className='font-semibold text-gray-900'>Title 1</p>
-                                    <p className='text-[10px] text-gray-400 uppercase'>ID: #4059</p>
-                                </td>
-                                <td className="px-6 py-4 whitespace-nowrap">
-                                    <span className='font-bold text-gray-700 text-sm'>20$</span>
-                                </td>
-                                <td className="px-6 py-4 whitespace-nowrap">
-                                    <span className="px-2.5 py-1 text-[10px] font-bold bg-gray-100 text-gray-600 rounded-full border border-gray-200">
-                                        UNCATAGORIZED
-                                    </span>
-                                </td>
-                                <td className="px-6 py-4">
-                                    <div className="flex justify-center items-center gap-3">
-                                        <button className="p-2 text-blue-500 hover:bg-blue-50 rounded-lg transition-all" title="Edit">
-                                            <Pencil size={18} />
-                                        </button>
-                                        <button className="p-2 text-red-500 hover:bg-red-50 rounded-lg transition-all" title="Delete">
-                                            <Trash2 size={18} />
-                                        </button>
-                                    </div>
-                                </td>
-                            </tr>
-
-                            {/* Example Row 2 */}
-                            <tr className="hover:bg-gray-50/50 transition-colors">
-                                <td className="px-6 py-4">
-                                    <img 
-                                        src={foodImg} 
-                                        alt="product" 
-                                        className="w-14 h-14 object-cover rounded-lg border border-gray-100 shadow-sm"
-                                    />
-                                </td>
-                                <td className="px-6 py-4 whitespace-nowrap font-semibold text-gray-900">Title 2</td>
-                                <td className="px-6 py-4 whitespace-nowrap font-bold text-gray-700 text-sm">45$</td>
-                                <td className="px-6 py-4 whitespace-nowrap">
-                                    <span className="px-2.5 py-1 text-[10px] font-bold bg-orange-50 text-orange-600 rounded-full border border-orange-100 uppercase">
-                                        Fast Food
-                                    </span>
-                                </td>
-                                <td className="px-6 py-4">
-                                    <div className="flex justify-center items-center gap-3">
-                                        <button className="p-2 text-blue-500 hover:bg-blue-50 rounded-lg transition-all"><Pencil size={18} /></button>
-                                        <button className="p-2 text-red-500 hover:bg-red-50 rounded-lg transition-all"><Trash2 size={18} /></button>
-                                    </div>
-                                </td>
-                            </tr>
+                          {products.map((product)=>(
+                            <InventoryItem key={product.id} product={product} setProducts={setProducts} handleDelete={handleDelete}/>
+                          ))}
                         </tbody>
                     </table>
                 </div>

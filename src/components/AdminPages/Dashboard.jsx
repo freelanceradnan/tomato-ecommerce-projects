@@ -7,90 +7,92 @@ import {
 import { useGetAllPostsQuery, useGetAllUsersQuery, useGetCategoryQuery } from "../../app/store";
 
 const Dashboard = () => {
-    const {data:allProduct=[]}=useGetAllPostsQuery()
-    const {data:allCategory=[]}=useGetCategoryQuery()
-    const {data:allUsers=[]}=useGetAllUsersQuery()
-  const data = [
-    { name: 'Jan', uv: 4000, pv: 2400 },
-    { name: 'Feb', uv: 3000, pv: 1398 },
-    { name: 'Mar', uv: 2000, pv: 9800 },
-    { name: 'Apr', uv: 2780, pv: 3908 },
-    { name: 'May', uv: 1890, pv: 4800 },
-  ];
+    const { data: allProduct = [] } = useGetAllPostsQuery();
+    const { data: allCategory = [] } = useGetCategoryQuery();
+    const { data: allUsers = [] } = useGetAllUsersQuery();
 
-  return (
-    <>
-    <div>
-    <div>
-        <h2 className="font-semibold text-2xl uppercase">Dashboard</h2>
-    </div>
-        <div className="lg:flex items-center  justify-between py-10 space-y-2">
-    
-    <div className="border border-[#d4a496] min-w-[200px] p-4  rounded-sm  bg-[#fcefeb]">
-     <div className="flex justify-between">
-        <h2 className="uppercase font-semibold">Products</h2>
-        <div><ShoppingCart color="white" className="bg-[#8f442d] p-1"/></div>
-     </div>
-     <div className="text-2xl">{allProduct.length}</div>
-    </div>
-    <div className="border border-[#91cea9] min-w-[200px] p-4  rounded-sm  bg-[#e5f9ed]">
-     <div className="flex justify-between">
-        <h2  className="uppercase font-semibold">Categories</h2>
-        <div><SquareKanban color="white" className="bg-[#12a84e] p-1"/></div>
-        
-     </div>
-     <div className="text-2xl">{allCategory.length}</div>
-    </div>
-     <div className="border border-[#b2dfe6] min-w-[200px] p-4  rounded-sm  bg-[#e5f8fb] ">
-     <div className="flex justify-between">
-        <h2  className="uppercase font-semibold">Users</h2>
-        <div><UsersRound color="white" className="bg-[#3bb0c2] p-1"/></div>
-     </div>
-     <div className="text-2xl">{allUsers.length}</div>
-    </div>
-    <div className="border border-[#cabf9d] min-w-[200px] p-4  rounded-sm  bg-[#fdf7e5]">
-     <div className="flex justify-between">
-        <h2  className="uppercase font-semibold">Orders</h2>
-        <div><Truck color="white" className="bg-[#94710a] p-1"/></div>
-     </div>
-     <div className="text-2xl">0</div>
-    </div>
-    </div>
-    {/* chats */}
-    <div className="lg:flex">
-          {/* Bar Chart */}
-      <div style={{ width: "100%", height: "50vh", maxWidth: "700px"}} className="border border-[#c4bbbb]">
-        <ResponsiveContainer>
-          <BarChart data={data}>
-            <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="name" />
-            <YAxis />
-            <Tooltip />
-            <Legend />
-            <Bar dataKey="pv" fill="#8884d8" />
-            <Bar dataKey="uv" fill="#82ca9d" />
-          </BarChart>
-        </ResponsiveContainer>
-      </div>
+    // This is the variable you defined
+    const chartData = [
+        { name: 'Products', count: allProduct.length },
+        { name: 'Categories', count: allCategory.length },
+        { name: 'Users', count: allUsers.length },
+        { name: 'Orders', count: 0 }
+    ];
 
-      {/* Line Chart */}
-      <div style={{ width: "100%", height: "50vh", maxWidth: "700px" }} className="border border-[#c4bbbb]">
-        <ResponsiveContainer>
-          <LineChart data={data}>
-            <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="name" />
-            <YAxis />
-            <Tooltip />
-            <Legend />
-            <Line type="monotone" dataKey="pv" stroke="#8884d8" />
-            <Line type="monotone" dataKey="uv" stroke="#82ca9d" />
-          </LineChart>
-        </ResponsiveContainer>
-      </div>
-    </div>
-    </div>
-    </>
-  );
+    return (
+        <>
+            <div>
+                <div>
+                    <h2 className="font-semibold text-2xl uppercase">Dashboard</h2>
+                </div>
+                <div className="lg:flex items-center justify-between py-10 space-y-2 lg:space-y-0 lg:gap-4">
+                    <div className="border border-[#d4a496] flex-1 p-4 rounded-sm bg-[#fcefeb]">
+                        <div className="flex justify-between">
+                            <h2 className="uppercase font-semibold">Products</h2>
+                            <ShoppingCart color="white" className="bg-[#8f442d] p-1" />
+                        </div>
+                        <div className="text-2xl font-bold">{allProduct.length}</div>
+                    </div>
+                    <div className="border border-[#91cea9] flex-1 p-4 rounded-sm bg-[#e5f9ed]">
+                        <div className="flex justify-between">
+                            <h2 className="uppercase font-semibold">Categories</h2>
+                            <SquareKanban color="white" className="bg-[#12a84e] p-1" />
+                        </div>
+                        <div className="text-2xl font-bold">{allCategory.length}</div>
+                    </div>
+                    <div className="border border-[#b2dfe6] flex-1 p-4 rounded-sm bg-[#e5f8fb]">
+                        <div className="flex justify-between">
+                            <h2 className="uppercase font-semibold">Users</h2>
+                            <UsersRound color="white" className="bg-[#3bb0c2] p-1" />
+                        </div>
+                        <div className="text-2xl font-bold">{allUsers.length}</div>
+                    </div>
+                    <div className="border border-[#cabf9d] flex-1 p-4 rounded-sm bg-[#fdf7e5]">
+                        <div className="flex justify-between">
+                            <h2 className="uppercase font-semibold">Orders</h2>
+                            <Truck color="white" className="bg-[#94710a] p-1" />
+                        </div>
+                        <div className="text-2xl font-bold">0</div>
+                    </div>
+                </div>
+
+                {/* Charts Section */}
+                <div className="lg:flex gap-4">
+                    {/* Bar Chart */}
+                    <div style={{ width: "100%", height: "50vh", maxWidth: "700px" }} className="border border-[#c4bbbb] py-8 px-4">
+                        <h2 className="font-bold mb-4">Inventory Overview</h2>
+                        <ResponsiveContainer>
+                            <BarChart data={chartData}>
+                                <CartesianGrid strokeDasharray="3 3" />
+                                <XAxis dataKey="name" />
+                                <YAxis />
+                                <Tooltip />
+                                <Legend />
+                                <Bar dataKey="count" fill="#3bb0c2" />
+                            </BarChart>
+                        </ResponsiveContainer>
+                    </div>
+
+                    {/* Line Chart */}
+                    <div style={{ width: "100%", height: "50vh", maxWidth: "700px" }} className="border border-[#c4bbbb] py-8 px-4">
+                        <h2 className="font-bold mb-4">Resource Comparison</h2>
+                        <ResponsiveContainer>
+                            {/* FIX 1: Changed 'data' to 'chartData' */}
+                            <LineChart data={chartData}>
+                                <CartesianGrid strokeDasharray="3 3" />
+                                <XAxis dataKey="name" />
+                                <YAxis />
+                                <Tooltip />
+                                <Legend />
+                                {/* FIX 2: Changed dataKey from 'pv/uv' to 'count' */}
+                                <Line type="monotone" dataKey="count" stroke="#8884d8" strokeWidth={3} />
+                            </LineChart>
+                        </ResponsiveContainer>
+                    </div>
+                </div>
+            </div>
+        </>
+    );
 };
 
 export default Dashboard;

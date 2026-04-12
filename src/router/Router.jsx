@@ -19,6 +19,8 @@ import Inventory from "../components/AdminPages/Inventory";
 import AddProduct from "../components/AdminPages/AddProduct";
 import User from "../components/AdminPages/User";
 import Settings from "../components/AdminPages/Settings";
+import EditProduct from "../components/AdminPages/EditProduct";
+import AdminRoute from "../components/AdminPages/AdminRoute";
 
 export const Router=createBrowserRouter([
     {path:"/",element:<Rootlayout/>,children:([
@@ -35,14 +37,19 @@ export const Router=createBrowserRouter([
         {path:"policies",index:false,element:<Policies/>}
     ])},
     {path:"/placeOrder",index:true,element:<Placeholder/>},
-    {path:"/admin-dashboard",element:<AdminPage/>,
+    {path:"/admin-dashboard",element:
+    <AdminRoute>
+    <AdminPage/>
+    </AdminRoute>
+    ,
     children:([
         {path:"",index:true,element:<Dashboard/>},
         {path:"inventory",element:<Inventory/>},
         {path:"addProduct",element:<AddProduct/>},
         {path:"orderMangement",element:<Order/>},
         {path:"userManagement",element:<User/>},
-        {path:"settings",element:<Settings/>}
+        {path:"settings",element:<Settings/>},
+        {path:"inventory/edit/:id",element:<EditProduct/>}
     ])
     },
     ])}
