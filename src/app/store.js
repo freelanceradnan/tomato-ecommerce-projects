@@ -1,6 +1,6 @@
 import { fakeBaseQuery } from "@reduxjs/toolkit/query";
 import { createApi } from "@reduxjs/toolkit/query/react";
-import { addDoc, collection, doc, getDocs, query, serverTimestamp, updateDoc, where } from "firebase/firestore";
+import { addDoc, collection, doc, getDoc, getDocs, query, serverTimestamp, updateDoc, where } from "firebase/firestore";
 import { db } from "../Firebase/Firebase";
 
 export const ApiSlice=createApi({
@@ -20,8 +20,25 @@ export const ApiSlice=createApi({
                 return {data:filteredData,error:null}
             }
             catch(error){
-                return {error:"faild to fetch all data"}
+  return { error: { message: "failed to fetch all data" } }
+}
+         },
+         providesTags:['products']
+        }),
+         getEditPost:builder.query({
+         async queryFn(id){
+            
+            try{
+            const productRef=doc(db,'products',id)
+            
+            const productsnap=await getDoc(productRef)
+            console.log(productsnap)
+            const product=productsnap.data()
+            return {data:product}
             }
+            catch(error){
+  return { error: { message: "failed to fetch all data" } }
+}
          },
          providesTags:['products']
         }),
@@ -37,13 +54,13 @@ export const ApiSlice=createApi({
                 return {data:filteredData,error:null}
             }
             catch(error){
-                return {error:"faild to fetch all data"}
-            }
+  return { error: { message: "failed to fetch all data" } }
+}
          },
          providesTags:['products']
         }),
         updateProduct:builder.mutation({
-        async queryFn(id,updates){
+        async queryFn({id,updates}){
             try {
              const upRef=doc(db,'products',id)
              const updateData=await updateDoc(upRef,{
@@ -51,9 +68,9 @@ export const ApiSlice=createApi({
                 updatedAt:serverTimestamp()
              })
              return {data:updateData}  
-            } catch (error) {
-                return {error:"failed to update data"}
-            }
+            } catch(error){
+  return { error: { message: "failed to update" } }
+}
         },
         invalidatesTags:['products']
         }),
@@ -103,4 +120,4 @@ export const ApiSlice=createApi({
         })
     })
 })
-export const {useAddProductMutation,useUpdateProductMutation,useGetAllPostsQuery,useGetCategoryQuery,useGetProductByCategoryQuery,useGetAllUsersQuery}=ApiSlice
+export const {useAddProductMutation,useUpdateProductMutation,useGetAllPostsQuery,useGetCategoryQuery,useGetProductByCategoryQuery,useGetAllUsersQuery,useGetEditPostQuery}=ApiSlice

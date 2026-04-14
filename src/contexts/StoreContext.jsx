@@ -18,6 +18,7 @@ export const StoreContextProvider=({children})=>{
 
     //user persists
     const initializeApp=async(activeUser)=>{
+      setIsLoading(true);
       if(activeUser){
          setCurrentUser({...activeUser})
          setLogin(true)
@@ -28,14 +29,14 @@ export const StoreContextProvider=({children})=>{
          if(docRef.exists()){
             const role=docRef.data().role
          setRole(role)
-         
+         setIsLoading(false)
          }
          else{
             setRole("user")
          }
 
       } catch (error) {
-         
+         setIsLoading(false)
       }
       }
       else{
@@ -43,7 +44,7 @@ export const StoreContextProvider=({children})=>{
          setLogin(false)
          setRole("")
       }
-      setIsLoading(false)
+      setIsLoading(false);
     }
     useEffect(()=>{
      const unsubscribe=onAuthStateChanged(auth,initializeApp)

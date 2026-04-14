@@ -39,7 +39,7 @@ const InventoryItem = ({product,handleDelete}) => {
                                 <td className="px-6 py-4">
                                     <div className="flex justify-center items-center gap-3">
                                         <Link to={`/admin-dashboard/inventory/edit/${product.id}`}>
-                                        {console.log(product)}
+                                      
                                         <button className="p-2 text-blue-500 hover:bg-blue-50 rounded-lg transition-all" title="Edit" >
                                             <Pencil size={18} />
                                         </button>

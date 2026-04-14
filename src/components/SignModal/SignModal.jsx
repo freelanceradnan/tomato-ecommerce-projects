@@ -5,8 +5,10 @@ import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from "fire
 import { useNavigate } from "react-router";
 import { toast } from "react-toastify";
 import { doc, setDoc } from "firebase/firestore";
+import { useLocation } from "react-router";
 const SignModal = ({ setModal, modal }) => {
   const navigate=useNavigate()
+  const location=useLocation()
   const [currentPage, setCurrentPage] = useState("Signup");
   const [signUser,setSignUsers]=useState({
     name:"",
@@ -50,7 +52,8 @@ const SignModal = ({ setModal, modal }) => {
       setErrorLogin("")
       setModal(false)
       
-      navigate("/")
+      const redirectPath = location.state?.from?.pathname || "/";
+        navigate(redirectPath, { replace: true });
       
      }
     } catch (error) {
