@@ -5,5 +5,8 @@ export const store=configureStore({
     reducer:{
         [ApiSlice.reducerPath]:ApiSlice.reducer
     },
-    middleware:(dM)=>dM().concat(ApiSlice.middleware)
+    middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware({
+      serializableCheck: false, 
+    }).concat(ApiSlice.middleware),
 })

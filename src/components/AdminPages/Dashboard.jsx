@@ -11,7 +11,7 @@ const Dashboard = () => {
     const { data: allCategory = [] } = useGetCategoryQuery();
     const { data: allUsers = [] } = useGetAllUsersQuery();
 
-    // This is the variable you defined
+    // This is the variable 
     const chartData = [
         { name: 'Products', count: allProduct.length },
         { name: 'Categories', count: allCategory.length },
@@ -57,39 +57,40 @@ const Dashboard = () => {
                 </div>
 
                 {/* Charts Section */}
-                <div className="lg:flex gap-4">
-                    {/* Bar Chart */}
-                    <div style={{ width: "100%", height: "50vh", maxWidth: "700px" }} className="border border-[#c4bbbb] py-8 px-4">
-                        <h2 className="font-bold mb-4">Inventory Overview</h2>
-                        <ResponsiveContainer>
-                            <BarChart data={chartData}>
-                                <CartesianGrid strokeDasharray="3 3" />
-                                <XAxis dataKey="name" />
-                                <YAxis />
-                                <Tooltip />
-                                <Legend />
-                                <Bar dataKey="count" fill="#3bb0c2" />
-                            </BarChart>
-                        </ResponsiveContainer>
-                    </div>
+                
+<div className="lg:flex gap-4">
+    {/* Bar Chart Container */}
+    <div className="flex-1 border border-[#c4bbbb] py-8 px-4 bg-white">
+        <h2 className="font-bold mb-4">Inventory Overview</h2>
+        
+        <ResponsiveContainer width="100%" height={300}>
+            <BarChart data={chartData} margin={{ top: 5, right: 20, left: 0, bottom: 5 }}>
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="name" />
+                <YAxis />
+                <Tooltip />
+                <Legend />
+                <Bar dataKey="count" fill="#3bb0c2" />
+            </BarChart>
+        </ResponsiveContainer>
+    </div>
 
-                    {/* Line Chart */}
-                    <div style={{ width: "100%", height: "50vh", maxWidth: "700px" }} className="border border-[#c4bbbb] py-8 px-4">
-                        <h2 className="font-bold mb-4">Resource Comparison</h2>
-                        <ResponsiveContainer>
-                            {/* FIX 1: Changed 'data' to 'chartData' */}
-                            <LineChart data={chartData}>
-                                <CartesianGrid strokeDasharray="3 3" />
-                                <XAxis dataKey="name" />
-                                <YAxis />
-                                <Tooltip />
-                                <Legend />
-                                {/* FIX 2: Changed dataKey from 'pv/uv' to 'count' */}
-                                <Line type="monotone" dataKey="count" stroke="#8884d8" strokeWidth={3} />
-                            </LineChart>
-                        </ResponsiveContainer>
-                    </div>
-                </div>
+    {/* Line Chart Container */}
+    <div className="flex-1 border border-[#c4bbbb] py-8 px-4 bg-white">
+        <h2 className="font-bold mb-4">Resource Comparison</h2>
+      
+        <ResponsiveContainer width="100%" height={300}>
+            <LineChart data={chartData} margin={{ top: 5, right: 20, left: 0, bottom: 5 }}>
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="name" />
+                <YAxis />
+                <Tooltip />
+                <Legend />
+                <Line type="monotone" dataKey="count" stroke="#8884d8" strokeWidth={3} />
+            </LineChart>
+        </ResponsiveContainer>
+    </div>
+</div>
             </div>
         </>
     );

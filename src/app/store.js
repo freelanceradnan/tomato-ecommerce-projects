@@ -32,7 +32,7 @@ export const ApiSlice=createApi({
             const productRef=doc(db,'products',id)
             
             const productsnap=await getDoc(productRef)
-            console.log(productsnap)
+            
             const product=productsnap.data()
             return {data:product}
             }
