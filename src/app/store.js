@@ -6,7 +6,7 @@ import { db } from "../Firebase/Firebase";
 export const ApiSlice=createApi({
     reducerPath:'api',
     baseQuery:fakeBaseQuery(),
-    tagTypes:['products','category'],
+    tagTypes:['products','category','users'],
     endpoints:(builder)=>({
         getAllPosts:builder.query({
          async queryFn(){
@@ -117,7 +117,36 @@ export const ApiSlice=createApi({
             return {error:"failed to add products"}
         }
         }
-        })
+        }),
+        getUsers:builder.query({
+         async queryFn(){
+            try {
+            const snapsort=await getDocs(query
+                (collection(db,'users')
+                ,where("isActive","==",true)))
+            return{
+                data:snapsort.docs.map((doc)=>({
+                    id:doc.id,
+                    ...doc.data()
+                }))
+            }
+            } catch (error) {
+                return {error:"failed to fetch active category"}
+            }
+         },
+         providesTags:['users']
+        }),
+        deleteUser: builder.mutation({
+      async queryFn(id) {
+        try {
+          await deleteDoc(doc(db, 'users', id));
+          return { data: id };
+        } catch (error) {
+          return { error: { message: "Delete failed" } };
+        }
+      },
+           invalidatesTags: ['Users'] 
+    }),
     })
 })
-export const {useAddProductMutation,useUpdateProductMutation,useGetAllPostsQuery,useGetCategoryQuery,useGetProductByCategoryQuery,useGetAllUsersQuery,useGetEditPostQuery}=ApiSlice
+export const {useAddProductMutation,useUpdateProductMutation,useGetAllPostsQuery,useGetCategoryQuery,useGetProductByCategoryQuery,useGetAllUsersQuery,useGetEditPostQuery,useGetUsersQuery,useDeleteUserMutation}=ApiSlice
