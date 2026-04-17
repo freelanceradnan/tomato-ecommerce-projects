@@ -25,7 +25,7 @@ const Navbar = () => {
   const handleLogout = () => {
     signOut(auth)
       .then(() => navigate('/'))
-      .catch(err => console.log(err));
+      // .catch(err => console.log(err));
   };
 
   const menuItems = [

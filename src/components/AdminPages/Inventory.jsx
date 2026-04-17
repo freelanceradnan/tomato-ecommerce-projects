@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { assets } from '../../assets/assets';
 import foodImg from '../../../src/assets/food_25.png';
 import { Pencil, Trash2 } from 'lucide-react';
@@ -7,9 +7,14 @@ import InventoryItem from './InventoryItem';
 import { deleteDoc, doc } from 'firebase/firestore';
 import { db } from '../../Firebase/Firebase';
 import { Link } from 'react-router';
+import { useReactToPrint } from 'react-to-print';
+import { toast } from 'react-toastify';
 
 const Inventory = () => {
-  const [products, setProducts] = useState([]); 
+  const [searchData,setSearchData]=useState([])
+  console.log(searchData.length)
+  const [products, setProducts] = useState([]);
+  const productRef=useRef(null)
   const {data:allProduct=[]}=useGetAllPostsQuery()
    useEffect(() => {
   
@@ -27,11 +32,25 @@ const handleDelete = async(id) => {
     
   }
 };
+//download pdf
+const downloadPDF=useReactToPrint({
+  contentRef:productRef,
+  onAfterPrint:()=>{
+    toast.success('Thanks For Download!', {
+  style: {
+    backgroundColor: '#46f112', 
+    color: '#ffffff'          
+  },
+  progressStyle: {
+    background: '#ffffff'     
+     }})
+  }
+})
     return (
        <div className=''>
          <div className='max-w-full flex flex-col gap-4 overflow-hidden'>
             {/* //top area */}
-        <div className='lg:flex items-center justify-between'>
+        <div className='lg:flex items-center justify-between '>
             <div className='md:flex flex-col gap-2'>
                 <p className='text-2xl font-semibold'>Inventory</p>
                 <p className='text-sm'>Manage your product inventory</p>
@@ -40,15 +59,15 @@ const handleDelete = async(id) => {
         </div>
         {/* //search area */}
         <div className='md:flex justify-between'>
-            <div><input type="search" name="" id="" className='border' placeholder='Search Products ...'/></div>
+            <div><input type="search" name="" id="" className='border py-1 px-2' placeholder='Search Products ...' onChange={(e)=>setSearchData(e.target.value)}/></div>
             <div className='flex gap-2'>
-                <button className='border px-4 py-1 rounded-sm border-[#525252] hover:bg-[#525252] hover:text-white'>Filter</button>
+                {/* <button className='border px-4 py-1 rounded-sm border-[#525252] hover:bg-[#525252] hover:text-white'>Filter</button> */}
                  <button className='border px-4 py-1 rounded-sm border-[#525252] hover:bg-[#525252] hover:text-white'>Excel</button>
-                 <button className='border px-4 py-1 rounded-sm border-[#525252] hover:bg-[#525252] hover:text-white'>Pdf</button>
+                 <button className='border px-4 py-1 rounded-sm border-[#525252] hover:bg-[#525252] hover:text-white' onClick={downloadPDF}>Pdf</button>
             </div>
         </div>
         {/* //table */}
-      <div className="w-full border border-gray-200 rounded-xl shadow-sm bg-white">
+      <div className="w-full border border-gray-200 rounded-xl shadow-sm bg-white" ref={productRef}>
                 {/* This div handles the horizontal scrolling logic strictly for the table */}
                 <div className="overflow-x-auto">
                     {/* min-w-[800px] ensures it doesn't squish on mobile */}
@@ -65,9 +84,22 @@ const handleDelete = async(id) => {
 
                         <tbody className="divide-y divide-gray-100">
                             {/* Example Row 1 */}
-                          {products.map((product)=>(
+                          {products.length>0? 
+                          products.filter((ele)=>{
+                            if(searchData.length ===0){
+                              return ele
+                            }
+                            else{
+                              return ele.title.toLowerCase().includes(searchData.toLowerCase())
+                            }
+                          }).map((product)=>(
                             <InventoryItem key={product.id} product={product} setProducts={setProducts} handleDelete={handleDelete}/>
-                          ))}
+                          ))
+                          
+                          :
+                          <h2>No Product Avalilable to</h2>
+                          }
+                          
                         </tbody>
                     </table>
                 </div>
