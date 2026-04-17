@@ -3,8 +3,9 @@ import React, { useState } from "react";
 import { auth,db } from "../../Firebase/Firebase";
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
 import { useNavigate } from "react-router";
+
 import { toast } from "react-toastify";
-import { doc, setDoc } from "firebase/firestore";
+import { doc, setDoc ,getDoc} from "firebase/firestore";
 import { useLocation } from "react-router";
 const SignModal = ({ setModal, modal }) => {
   const navigate=useNavigate()
@@ -34,75 +35,48 @@ const SignModal = ({ setModal, modal }) => {
       setErrorLogin("")
     }
   }
-  const SubmitLogin=async(e)=>{
-    e.preventDefault()
-    setLoadingLogin(true)
+const SubmitLogin = async (e) => {
+    e.preventDefault();
+    setLoadingLogin(true);
     try {
-     const result= await signInWithEmailAndPassword(auth,userlogin.email,userlogin.password)
-     if(result.user){
-      toast.success('welcome back!', {
-  style: {
-    backgroundColor: '#ff8c00', 
-    color: '#ffffff'          
-  },
-  progressStyle: {
-    background: '#ffffff'     
-     }});
-      setLoadingLogin(false)
-      setErrorLogin("")
-      setModal(false)
+      const result = await signInWithEmailAndPassword(auth, userlogin.email, userlogin.password);
       
-      const redirectPath = location.state?.from?.pathname || "/";
+      if (result.user) {
+      
+        const userDoc = await getDoc(doc(db, 'users', result.user.uid));
+        
+        if (userDoc.exists()) {
+          const userData = userDoc.data();
+
+          if (userData.isActive === false) {
+            toast.info('Your account is currently under review.', {
+              style: { backgroundColor: '#ff8c00', color: '#ffffff' },
+            });
+           
+          } else {
+            toast.success('Welcome back!', {
+              style: { backgroundColor: '#ff8c00', color: '#ffffff' },
+            });
+          }
+        }
+
+       
+        setLoadingLogin(false);
+        setErrorLogin("");
+        
+   
+        setModal(false);
+
+       
+        const redirectPath = location.state?.from?.pathname || "/";
         navigate(redirectPath, { replace: true });
-      
-     }
+        
+         
+      }
     } catch (error) {
-  setLoadingLogin(false);
-  const errorCode = error.code;
-  let message = "";
-
-  switch (errorCode) {
-    case 'auth/invalid-credential':
-      message = "Invalid email or password. Please try again.";
-      break;
-    case 'auth/user-not-found':
-      message = "No account found with this email.";
-      break;
-    case 'auth/wrong-password':
-      message = "Incorrect password.";
-      break;
-    case 'auth/too-many-requests':
-      message = "Too many failed attempts. Try again later.";
-      break;
-    case 'auth/invalid-email':
-      message = "The email address is not valid.";
-      break;
-    default:
-      message = "Login failed. Please try again.";
-  }
-
- 
-  setErrorLogin(message);
-
-  
-  toast.error(message, {
-    style: {
-      backgroundColor: '#ff8c00',
-      color: '#ffffff'
-    },
-    progressStyle: {
-      background: '#ffffff'
+      
     }
-  });
-
-
-;
-    }
-    setUserLogin({
-      email:"",
-      password:""
-    })
-  }
+  };
   //change singup handler
   const changeSignHandler=(e)=>{
     setSignUsers({...signUser,[e.target.name]:e.target.value})
@@ -124,7 +98,8 @@ const SignModal = ({ setModal, modal }) => {
       await setDoc(doc(db,'users',auth.currentUser.uid),{
         email:signUser.email,
         role:"user",
-        name:signUser.name
+        name:signUser.name,
+        isActive: true
       })
     }
   toast.success('Signup Successfully!', {

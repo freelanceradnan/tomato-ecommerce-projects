@@ -1,86 +1,93 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import { food_list } from "../assets/assets";
-import { onAuthStateChanged } from "firebase/auth";
-import { initializeApp } from 'firebase/app';
-import { getDoc,doc} from "firebase/firestore";
+import { onAuthStateChanged, signOut } from "firebase/auth"; // Added signOut import
+import { getDoc, doc } from "firebase/firestore";
 import { auth, db } from "../Firebase/Firebase";
+import { toast } from "react-toastify";
 
-export const useAuth=()=>{
-   return useContext(StoreContext)
-}
-export const StoreContext=createContext()
-export const StoreContextProvider=({children})=>{
-    const[cartItems,setCartItems]=useState({})
-    const [currentUser,setCurrentUser]=useState(null)
-    const [isLogin,setLogin]=useState(false)
-    const [isLoading,setIsLoading]=useState(true)
-    const [role,setRole]=useState("")
+export const StoreContext = createContext();
 
-    //user persists
-    const initializeApp=async(activeUser)=>{
-      setIsLoading(true);
-      if(activeUser){
-         setCurrentUser({...activeUser})
-         setLogin(true)
-        
-         try {
-         const docRef=await getDoc(doc(db,'users',activeUser.uid))
-         
-         if(docRef.exists()){
-            const role=docRef.data().role
-         setRole(role)
-         setIsLoading(false)
-         }
-         else{
-            setRole("user")
-         }
+export const useAuth = () => {
+  return useContext(StoreContext);
+};
 
-      } catch (error) {
-         setIsLoading(false)
+export const StoreContextProvider = ({ children }) => {
+  const [cartItems, setCartItems] = useState({});
+  const [currentUser, setCurrentUser] = useState(null);
+  const [isLogin, setLogin] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+  const [role, setRole] = useState("");
+
+  const handleAuthState = async (activeUser) => {
+    setIsLoading(true); // Start loading
+
+    try {
+      if (activeUser) {
+        const docRef = await getDoc(doc(db, 'users', activeUser.uid));
+
+        if (docRef.exists()) {
+          const userData = docRef.data();
+
+          if (userData.isActive) {
+            setCurrentUser(activeUser);
+            setRole(userData.role || "user");
+            setLogin(true);
+          } else {
+            // User disabled: Log them out of Firebase
+            await signOut(auth);
+            setCurrentUser(null);
+            setLogin(false);
+            setRole("");
+          }
+        } else {
+          // No Firestore Doc: Log them out of Firebase
+          await signOut(auth);
+          setCurrentUser(null);
+          setLogin(false);
+          setRole("");
+          // Use toast or a less intrusive way than alert if possible
+          toast.error('No data available for login. Please contact admin.', {
+    style: {
+      backgroundColor: '#ff8c00', // Matching your orange theme
+      color: '#ffffff'
+    },
+    progressStyle: {
+      background: '#ffffff'
+    }
+  });
+        }
+      } else {
+        // No user logged in at all
+        setCurrentUser(null);
+        setLogin(false);
+        setRole("");
       }
-      }
-      else{
-         setCurrentUser(null)
-         setLogin(false)
-         setRole("")
-      }
-      setIsLoading(false);
+    } catch (error) {
+      console.error("Auth Error:", error);
+    } finally {
+      setIsLoading(false); // THIS MUST RUN NO MATTER WHAT
     }
-    useEffect(()=>{
-     const unsubscribe=onAuthStateChanged(auth,initializeApp)
-     return unsubscribe
-    },[])
+  };
 
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, handleAuthState);
+    return () => unsubscribe();
+  }, []);
 
+  // ... rest of your cart functions
 
+  const contextValue = {
+    isLogin,
+    isLoading,
+    role,
+    food_list,
+    
+    currentUser,
+  };
 
-
-
-    const addToCart=(itemId)=>{
-     if(!cartItems[itemId]){
-        setCartItems((prev)=>({...prev,[itemId]:1}))
-     }
-     else{
-        setCartItems((prev)=>({...prev,[itemId]:prev[itemId]+1}))
-     }
-    }
-    const removeCart=(itemId)=>{
-     setCartItems((prev)=>({...prev,[itemId]:prev[itemId]-1}))
-    }
-   
-    const contextValue={
-       isLogin,
-       isLoading,
-       role,
-        food_list,
-        cartItems,
-        setCartItems,addToCart,
-        removeCart,
-        currentUser
-    }
-return(
-   <StoreContext.Provider value={contextValue}>
-    {children}
-   </StoreContext.Provider> 
-)
-}
+  return (
+    <StoreContext.Provider value={contextValue}>
+      {children}
+    </StoreContext.Provider>
+  );
+};

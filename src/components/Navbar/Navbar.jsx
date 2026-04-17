@@ -3,7 +3,7 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { ShoppingBag, User, X, Search, Menu as MenuIcon, LogOut } from 'lucide-react';
 import { assets } from '../../assets/assets';
 import SignModal from '../SignModal/SignModal';
-import { StoreContext } from '../../contexts/StoreContext';
+import { StoreContext, useAuth } from '../../contexts/StoreContext';
 import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/react';
 import { auth } from '../../Firebase/Firebase';
 import { signOut } from 'firebase/auth';
@@ -11,7 +11,7 @@ import { signOut } from 'firebase/auth';
 const Navbar = () => {
   const navigate = useNavigate();
   const location = useLocation();
-
+  const {isLoading}=useAuth()
   const { isLogin, role } = useContext(StoreContext);
 
   const [isOpen, setIsOpen] = useState(false);
@@ -34,7 +34,7 @@ const Navbar = () => {
     { name: 'Mobile-App', label: 'Mobile-App', to: '/#mobileApp' },
     { name: 'Contact-us', label: 'Contact-us', to: '/#contactUs' }
   ];
-
+if (isLoading) return <div>Loading...</div>; 
   return (
     <>
       <nav className="bg-white border-b border-gray-200 sticky top-0 z-50">
