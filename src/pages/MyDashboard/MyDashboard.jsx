@@ -33,7 +33,7 @@ const MyDashboard = () => {
         backgroundColor: "#0F172A", 
         color: "white", 
         
-      }} className='max-w-30 md:max-w-60 p-0 md:p-5'>
+      }} className='max-w-30 md:max-w-60 p-2 md:p-5'>
         
         <ul style={{ listStyle: "none", padding: 0 }} className='flex flex-col gap-3'>
           <button>
@@ -95,7 +95,7 @@ const MyDashboard = () => {
       </nav>
 
       {/* Main Content Area */}
-      <main style={{ flexGrow: 1, padding: "20px", backgroundColor: "#f4f4f4" }}>
+      <main style={{ flexGrow: 1, padding: "5px", backgroundColor: "#f4f4f4" }}>
         
         <Outlet />
       </main>

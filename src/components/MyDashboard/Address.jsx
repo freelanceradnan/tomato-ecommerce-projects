@@ -76,21 +76,32 @@ const handleAreaChange = (e) => {
       console.log(error.massege)
      }
     }
- useEffect(()=>{
-const initializer=async(userData)=>{
-  try {
-    const docRef=doc(db,'users',userData.uid)
-    const docSnap=await getDoc(docRef)
-    if(docSnap.exists()){
-      setUserData(docSnap.data())
-      setOriginalData(docSnap.data())
+useEffect(() => {
+ 
+  const unsubscribe = onAuthStateChanged(auth, async (user) => {
+    if (user) {
+      try {
+        const docRef = doc(db, 'users', user.uid);
+        const docSnap = await getDoc(docRef);
+        
+        if (docSnap.exists()) {
+          const data = docSnap.data();
+          setUserData(data);
+          setOriginalData(data);
+        }
+      } catch (error) {
+        console.error("Error fetching user data:", error);
+        alert('Failed to fetch data');
+      }
+    } else {
+      
+      setUserData(null);
     }
-  } catch (error) {
-    return alert('faild to fetch data')
-  }
-}
-return ()=>onAuthStateChanged(auth,initializer)
- },[])
+  });
+
+  // This cleans up the listener when the component unmounts
+  return () => unsubscribe();
+}, []);
 const handlerCancel=()=>{
   setUserData(originalData)
   setEditMode(false)

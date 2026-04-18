@@ -25,24 +25,29 @@ const changeHandler = (e) => {
         }));
     };
 
-  useEffect(()=>{
-const intializer=async(user)=>{
-try {
-  const docRef=doc(db,'users',user.uid)
-  const datasnap=await getDoc(docRef)
-  if(datasnap.exists()){
-    setUserData(datasnap.data())
-    setOriginalData(datasnap.data())
-  }
-  else{
-    console.log('no data availble on store')
-  }
-} catch (error) {
-  console.log('failed to fetch data')
-}
-}
-return ()=>onAuthStateChanged(auth,intializer)
-},[])
+useEffect(() => {
+  
+    const unsubscribe = onAuthStateChanged(auth, async (user) => {
+        if (user) {
+            try {
+                const docRef = doc(db, 'users', user.uid);
+                const datasnap = await getDoc(docRef);
+                if (datasnap.exists()) {
+                    setUserData(datasnap.data());
+                    setOriginalData(datasnap.data());
+                } else {
+                    console.log('No data available in Firestore');
+                }
+            } catch (error) {
+                console.error('Failed to fetch data:', error);
+            }
+        } else {
+            console.log('No user is logged in');
+        }
+    });
+
+    return () => unsubscribe();
+}, []);
 const handlerCancel=()=>{
 setUserData(originalData)
 setEditMode(false)
