@@ -148,6 +148,21 @@ export const ApiSlice=createApi({
       },
       invalidatesTags: ['users'] 
     }),
+    updateUser:builder.mutation({
+        async queryFn({id,...editForm}){
+           
+            try {
+             const upRef=doc(db,'users',id)
+             const updateData=await updateDoc(upRef,{
+                ...editForm
+             })
+             return {data:updateData}  
+            } catch(error){
+  return { error: { message: "failed to update" } }
+}
+        },
+        invalidatesTags:['users']
+        }),
     })
 })
-export const {useAddProductMutation,useUpdateProductMutation,useGetAllPostsQuery,useGetCategoryQuery,useGetProductByCategoryQuery,useGetAllUsersQuery,useGetEditPostQuery,useGetUsersQuery,useDeleteUserMutation}=ApiSlice
+export const {useAddProductMutation,useUpdateProductMutation,useGetAllPostsQuery,useGetCategoryQuery,useGetProductByCategoryQuery,useGetAllUsersQuery,useGetEditPostQuery,useGetUsersQuery,useDeleteUserMutation,useUpdateUserMutation}=ApiSlice
