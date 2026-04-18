@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
 import { NavLink } from 'react-router-dom';
 import { useMediaQuery } from 'usehooks-ts';
-import { Box, House, Plus, Settings, Truck, Users, X, MenuIcon } from 'lucide-react';
+import { Box, House, Plus, Settings, Truck, Users, X, MenuIcon, LogOut } from 'lucide-react';
+import { signOut } from 'firebase/auth';
+import { auth } from '../../Firebase/Firebase';
 
 const AdminNav = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -58,7 +60,9 @@ const AdminNav = () => {
           <NavLink onClick={closeMenu} to="settings" className="flex gap-2 p-2">
             <Settings /> Settings
           </NavLink>
-
+           <NavLink onClick={()=>signOut(auth)} to="settings" className="flex gap-2 p-2">
+            <LogOut /> logout
+          </NavLink>
         </div>
       </nav>
 

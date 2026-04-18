@@ -1,6 +1,6 @@
 import React from 'react';
 import AdminNav from '../../components/AdminNav/AdminNav';
-import { Outlet } from 'react-router';
+import { Outlet } from 'react-router-dom';
 import { CircleChevronRight } from 'lucide-react';
 
 const AdminPage = () => {

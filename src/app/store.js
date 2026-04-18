@@ -1,6 +1,6 @@
 import { fakeBaseQuery } from "@reduxjs/toolkit/query";
 import { createApi } from "@reduxjs/toolkit/query/react";
-import { addDoc, collection, doc, getDoc, getDocs, query, serverTimestamp, updateDoc, where } from "firebase/firestore";
+import { addDoc, collection, deleteDoc, doc, getDoc, getDocs, query, serverTimestamp, updateDoc, where } from "firebase/firestore";
 import { db } from "../Firebase/Firebase";
 
 export const ApiSlice=createApi({
@@ -57,7 +57,7 @@ export const ApiSlice=createApi({
   return { error: { message: "failed to fetch all data" } }
 }
          },
-         providesTags:['products']
+         providesTags:['users']
         }),
         updateProduct:builder.mutation({
         async queryFn({id,updates}){
@@ -138,6 +138,7 @@ export const ApiSlice=createApi({
         }),
         deleteUser: builder.mutation({
       async queryFn(id) {
+        
         try {
           await deleteDoc(doc(db, 'users', id));
           return { data: id };
@@ -145,7 +146,7 @@ export const ApiSlice=createApi({
           return { error: { message: "Delete failed" } };
         }
       },
-           invalidatesTags: ['Users'] 
+      invalidatesTags: ['users'] 
     }),
     })
 })

@@ -69,9 +69,9 @@ const downloadPDF=useReactToPrint({
         {/* //table */}
       <div className="w-full border border-gray-200 rounded-xl shadow-sm bg-white" ref={productRef}>
                 {/* This div handles the horizontal scrolling logic strictly for the table */}
-                <div className="overflow-x-auto">
+                <div className="w-full">
                     {/* min-w-[800px] ensures it doesn't squish on mobile */}
-                    <table className="w-full text-left border-collapse min-w-[800px]">
+                    <table className="w-full text-left border-collapse">
                         <thead>
                             <tr className="bg-gray-50 border-b border-gray-200">
                                 <th className="px-6 py-4 font-bold text-[11px] text-gray-500 uppercase tracking-widest">Image</th>

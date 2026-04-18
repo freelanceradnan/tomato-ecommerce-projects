@@ -1,4 +1,4 @@
-import { createBrowserRouter } from "react-router";
+import { createBrowserRouter } from "react-router-dom";
 import Rootlayout from "../pages/Rootlayout";
 import Home from "../pages/Home/Home";
 import Cart from "../pages/Cart/Cart";
@@ -37,20 +37,22 @@ export const Router=createBrowserRouter([
         {path:"policies",index:false,element:<Policies/>}
     ])},
     {path:"/placeOrder",index:true,element:<Placeholder/>},
-    {path:"/admin-dashboard",element:
+    {
+  path: "/admin-dashboard",
+  element: (
     <AdminRoute>
-    <AdminPage/>
+      <AdminPage />
     </AdminRoute>
-    ,
-    children:([
-        {path:"",index:true,element:<Dashboard/>},
-        {path:"inventory",element:<Inventory/>},
-        {path:"addProduct",element:<AddProduct/>},
-        {path:"orderMangement",element:<Order/>},
-        {path:"userManagement",element:<User/>},
-        {path:"settings",element:<Settings/>},
-        {path:"inventory/edit/:id",element:<EditProduct/>}
-    ])
-    },
+  ),
+  children: [
+    { index: true, element: <Dashboard /> }, 
+    { path: "inventory", element: <Inventory /> },
+    { path: "addProduct", element: <AddProduct /> },
+    { path: "orderMangement", element: <Order /> },
+    { path: "userManagement", element: <User /> },
+    { path: "settings", element: <Settings /> },
+    { path: "inventory/edit/:id", element: <EditProduct /> }
+  ]
+},
     ])}
 ])

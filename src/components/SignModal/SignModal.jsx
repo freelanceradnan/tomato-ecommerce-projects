@@ -49,10 +49,10 @@ const SubmitLogin = async (e) => {
           const userData = userDoc.data();
 
           if (userData.isActive === false) {
-            toast.info('Your account is currently under review.', {
+            toast.info('Your account is disabled!please contact admin.', {
               style: { backgroundColor: '#ff8c00', color: '#ffffff' },
             });
-           
+           navigate("/")
           } else {
             toast.success('Welcome back!', {
               style: { backgroundColor: '#ff8c00', color: '#ffffff' },

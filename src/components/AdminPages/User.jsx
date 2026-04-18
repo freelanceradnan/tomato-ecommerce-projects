@@ -1,24 +1,24 @@
 import React from 'react';
 import { Trash2 } from 'lucide-react';
 import { useDeleteUserMutation, useGetAllUsersQuery } from '../../app/store';
-// Assuming you are using react-hot-toast or react-toastify
-// import { toast } from 'react-hot-toast'; 
+
 
 const User = () => {
-    // 1. Get data directly from the hook
+   
     const { data: allusers = [], isLoading, isError } = useGetAllUsersQuery();
     const [deleteUserMutation] = useDeleteUserMutation();
 
     const handleDelete = async (id) => {
+        console.log(id)
         if (!window.confirm("Are you sure you want to delete this user?")) return;
-
+     
         try {
-            // Use the mutation trigger (renamed to avoid conflict)
+          
             await deleteUserMutation(id).unwrap();
-            alert("User deleted successfully"); // Replace with toast.success()
+            alert("User deleted successfully"); 
         } catch (error) {
             console.error(error);
-            alert("Failed to delete user"); // Replace with toast.error()
+            alert("Failed to delete user"); 
         }
     };
 

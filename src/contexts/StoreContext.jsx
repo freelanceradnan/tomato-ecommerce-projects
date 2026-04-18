@@ -1,71 +1,63 @@
 import { createContext, useContext, useEffect, useState } from "react";
-import { food_list } from "../assets/assets";
-import { onAuthStateChanged, signOut } from "firebase/auth"; // Added signOut import
+import { onAuthStateChanged, signOut } from "firebase/auth";
 import { getDoc, doc } from "firebase/firestore";
 import { auth, db } from "../Firebase/Firebase";
 import { toast } from "react-toastify";
 
 export const StoreContext = createContext();
 
-export const useAuth = () => {
-  return useContext(StoreContext);
-};
-
 export const StoreContextProvider = ({ children }) => {
-  const [cartItems, setCartItems] = useState({});
   const [currentUser, setCurrentUser] = useState(null);
   const [isLogin, setLogin] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
-  const [role, setRole] = useState("");
+  const [role, setRole] = useState(null);
+
+  const resetAuthStates = () => {
+    setCurrentUser(null);
+    setLogin(false);
+    setRole(null);
+  };
 
   const handleAuthState = async (activeUser) => {
-    setIsLoading(true); // Start loading
-
     try {
-      if (activeUser) {
-        const docRef = await getDoc(doc(db, 'users', activeUser.uid));
+   
 
-        if (docRef.exists()) {
-          const userData = docRef.data();
-
-          if (userData.isActive) {
-            setCurrentUser(activeUser);
-            setRole(userData.role || "user");
-            setLogin(true);
-          } else {
-            // User disabled: Log them out of Firebase
-            await signOut(auth);
-            setCurrentUser(null);
-            setLogin(false);
-            setRole("");
-          }
-        } else {
-          // No Firestore Doc: Log them out of Firebase
-          await signOut(auth);
-          setCurrentUser(null);
-          setLogin(false);
-          setRole("");
-          // Use toast or a less intrusive way than alert if possible
-          toast.error('No data available for login. Please contact admin.', {
-    style: {
-      backgroundColor: '#ff8c00', // Matching your orange theme
-      color: '#ffffff'
-    },
-    progressStyle: {
-      background: '#ffffff'
-    }
-  });
-        }
-      } else {
-        // No user logged in at all
-        setCurrentUser(null);
-        setLogin(false);
-        setRole("");
+      if (!activeUser) {
+        resetAuthStates();
+        setIsLoading(false);
+        return;
       }
+
+      const snap = await getDoc(doc(db, "users", activeUser.uid));
+
+      if (!snap.exists()) {
+        await signOut(auth);
+        resetAuthStates();
+        setIsLoading(false);
+        toast.error("No profile found for this account.");
+        return;
+      }
+
+      const userData = snap.data();
+
+      if (!userData.isActive) {
+        await signOut(auth);
+        resetAuthStates();
+        setIsLoading(false);
+        // toast.error("Account deactivated. Contact admin.");
+        return;
+      }
+
+      
+      setCurrentUser(activeUser);
+      setRole(userData.role || "user");
+      setLogin(true);
+      setIsLoading(false);
+
     } catch (error) {
-      console.error("Auth Error:", error);
-    } finally {
-      setIsLoading(false); // THIS MUST RUN NO MATTER WHAT
+      console.error("Auth Sync Error:", error);
+      resetAuthStates();
+      setIsLoading(false);
     }
   };
 
@@ -74,20 +66,18 @@ export const StoreContextProvider = ({ children }) => {
     return () => unsubscribe();
   }, []);
 
-  // ... rest of your cart functions
-
-  const contextValue = {
-    isLogin,
-    isLoading,
-    role,
-    food_list,
-    
-    currentUser,
-  };
-
   return (
-    <StoreContext.Provider value={contextValue}>
+    <StoreContext.Provider
+      value={{
+        isLogin,
+        isLoading,
+        role,
+        currentUser,
+      }}
+    >
       {children}
     </StoreContext.Provider>
   );
 };
+
+export const useAuth = () => useContext(StoreContext);

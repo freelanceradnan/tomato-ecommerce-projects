@@ -10,7 +10,6 @@ import 'react-toastify/dist/ReactToastify.css';
 import { Provider } from 'react-redux';
 import { store } from './Feature/store';
 createRoot(document.getElementById('root')).render(
-  <StrictMode>
    <Provider store={store}>
     <StoreContextProvider>
      <ToastContainer 
@@ -19,10 +18,8 @@ createRoot(document.getElementById('root')).render(
       theme="colored"
     />
     
-    <RouterProvider router={Router}>
-   
-   </RouterProvider>
-   </StoreContextProvider>
+    <RouterProvider router={Router} />
+    
+    </StoreContextProvider>
    </Provider>
-  </StrictMode>,
 )
