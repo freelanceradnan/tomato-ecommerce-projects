@@ -2,7 +2,6 @@ import { createContext, useContext, useEffect, useState } from "react";
 import { onAuthStateChanged, signOut } from "firebase/auth";
 import { getDoc, doc } from "firebase/firestore";
 import { auth, db } from "../Firebase/Firebase";
-import { toast } from "react-toastify";
 
 export const StoreContext = createContext();
 
@@ -12,67 +11,57 @@ export const StoreContextProvider = ({ children }) => {
   const [isLoading, setIsLoading] = useState(true);
   const [role, setRole] = useState(null);
 
-  const resetAuthStates = () => {
+  const resetAuth = () => {
     setCurrentUser(null);
     setLogin(false);
     setRole(null);
   };
 
-  const handleAuthState = async (activeUser) => {
-    try {
-   
-
-      if (!activeUser) {
-        resetAuthStates();
-        setIsLoading(false);
-        return;
-      }
-
-      const snap = await getDoc(doc(db, "users", activeUser.uid));
-
-      if (!snap.exists()) {
-        await signOut(auth);
-        resetAuthStates();
-        setIsLoading(false);
-        toast.error("No profile found for this account.");
-        return;
-      }
-
-      const userData = snap.data();
-
-      if (!userData.isActive) {
-        await signOut(auth);
-        resetAuthStates();
-        setIsLoading(false);
-        // toast.error("Account deactivated. Contact admin.");
-        return;
-      }
-
-      
-      setCurrentUser(activeUser);
-      setRole(userData.role || "user");
-      setLogin(true);
-      setIsLoading(false);
-
-    } catch (error) {
-      console.error("Auth Sync Error:", error);
-      resetAuthStates();
-      setIsLoading(false);
-    }
-  };
-
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, handleAuthState);
+    setIsLoading(true);
+
+    const unsubscribe = onAuthStateChanged(auth, async (user) => {
+      try {
+        if (!user) {
+          resetAuth();
+          setIsLoading(false);
+          return;
+        }
+
+        const snap = await getDoc(doc(db, "users", user.uid));
+
+        if (!snap.exists()) {
+          await signOut(auth);
+          resetAuth();
+          setIsLoading(false);
+          return;
+        }
+
+        const data = snap.data();
+
+        setCurrentUser(user);
+        setRole(data.role || "user");
+        setLogin(true);
+
+        setIsLoading(false);
+
+      } catch (error) {
+        console.log(error);
+        resetAuth();
+        setIsLoading(false);
+      }
+    });
+
     return () => unsubscribe();
-  }, []);
+  }, []); 
 
   return (
     <StoreContext.Provider
       value={{
+        currentUser,
         isLogin,
         isLoading,
-        role,
-        currentUser,
+        role
       }}
     >
       {children}

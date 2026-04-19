@@ -7,8 +7,11 @@ import { StoreContext, useAuth } from '../../contexts/StoreContext';
 import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/react';
 import { auth } from '../../Firebase/Firebase';
 import { signOut } from 'firebase/auth';
+import { useSelector } from 'react-redux';
 
 const Navbar = () => {
+  const cart=useSelector(state=>state.user)
+  const totalProduct=cart.reduce((sum,item)=>sum+item.quantity,0)
   const navigate = useNavigate();
   const location = useLocation();
   const {isLoading}=useAuth()
@@ -77,7 +80,7 @@ const Navbar = () => {
                   <Link to="/cart" className="relative">
                     <ShoppingBag size={20} />
                     <span className="absolute -top-1 -right-1 bg-tomato text-white text-[10px] rounded-full px-1">
-                      3
+                     {totalProduct}
                     </span>
                   </Link>
                 </>

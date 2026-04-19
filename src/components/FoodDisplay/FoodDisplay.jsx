@@ -18,7 +18,7 @@ const FoodDisplay = ({product}) => {
         <h2 className='font-[max(2vw,24px)] text-[600]'>Top dishes near you</h2>
         <div className="food-grid">
         {product.map((pro)=>(
-            <FoodItem key={pro.id} id={pro.id} image={pro.image} description={pro.description} price={pro.price}/>
+            <FoodItem key={pro.id} id={pro.id} product={pro}/>
         ))}
         </div>  
         </div>
