@@ -31,7 +31,7 @@ import FakePayment from "../pages/FakePayment/Payment";
 import OrderSuccess from "../pages/OrderSuccess/OrderSuccess";
 import OrderMangement from "../components/AdminPages/OrderMangement";
 
-export const Router = createBrowserRouter([
+const Router = createBrowserRouter([
   {
     path: "/",
     element: <Rootlayout />,
@@ -89,3 +89,4 @@ export const Router = createBrowserRouter([
     ],
   },
 ]);
+export default Router
