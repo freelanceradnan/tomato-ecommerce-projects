@@ -10,7 +10,8 @@ export const StoreContextProvider = ({ children }) => {
   const [isLogin, setLogin] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [role, setRole] = useState(null);
-
+  const [orderDetails,setOrderDetails]=useState({})
+  const [orderId,setOrderId]=useState("")
   const resetAuth = () => {
     setCurrentUser(null);
     setLogin(false);
@@ -61,7 +62,10 @@ export const StoreContextProvider = ({ children }) => {
         currentUser,
         isLogin,
         isLoading,
-        role
+        role,
+        orderDetails,
+        setOrderDetails,
+        orderId,setOrderId
       }}
     >
       {children}

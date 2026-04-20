@@ -3,14 +3,15 @@ import { useDispatch, useSelector } from 'react-redux';
 import { clearCart, modifyQuantity, removeToCart } from '../../app/userDetails';
 import { Trash2, Plus, Minus, ShoppingBag, Trash } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
 const Cart = () => {
     const cart = useSelector(state => state.user);
     const dispatch = useDispatch();
-
+    const totalProduct=cart.reduce((sum,item)=>sum+item.quantity,0)
     const subtotal = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
     const deliveryFee = cart.length > 0 ? 5.00 : 0;
-
+    
     if (cart.length === 0) {
         return (
             <div className="flex flex-col items-center justify-center min-h-[60vh] space-y-4">
@@ -66,7 +67,17 @@ const Cart = () => {
                             <div className="flex items-center justify-between w-full sm:w-auto sm:gap-8">
                                 <p className="font-bold text-gray-800">${(item.price * item.quantity).toFixed(2)}</p>
                                 <button 
-                                    onClick={() => dispatch(removeToCart(item.id))}
+                                    onClick={() => {
+                                        dispatch(removeToCart(item.id))
+                                          toast.error('Product Deleted!', {
+                                              style: {
+                                                backgroundColor: 'green', 
+                                                color: '#ffffff'          
+                                              },
+                                              progressStyle: {
+                                                background: '#ffffff'     
+                                                 }});
+                                    }}
                                     className="text-gray-400 hover:text-red-500 transition"
                                 >
                                     <Trash2 size={20} />
@@ -76,7 +87,17 @@ const Cart = () => {
                     ))}
 
                     <button 
-                        onClick={() => dispatch(clearCart())}
+                        onClick={() => {
+                            dispatch(clearCart())
+                            toast.error('Clear Cart!', {
+                                              style: {
+                                                backgroundColor: 'blue', 
+                                                color: '#ffffff'          
+                                              },
+                                              progressStyle: {
+                                                background: '#ffffff'     
+                                                 }});
+                        }}
                         className="text-sm  font-medium mt-4 flex items-center justify-center bg-red-700 p-2 text-white gap-1 rounded-sm hover:bg-red-900"
                     >
                        <span> Clear Cart</span> <Trash2 size={20}/>
@@ -101,9 +122,14 @@ const Cart = () => {
                             <span className="text-lg font-bold">Total</span>
                             <span className="text-2xl font-extrabold text-orange-600">${(subtotal + deliveryFee).toFixed(2)}</span>
                         </div>
-                        <button className="w-full bg-orange-500 text-white py-4 rounded-xl font-bold text-lg hover:bg-orange-600 shadow-lg shadow-orange-200 transition-all active:scale-[0.98]">
+                        
+                        {totalProduct>0?
+                    <Link to="/processCheckout">
+                    <button className="w-full bg-orange-500 text-white py-4 rounded-xl font-bold text-lg hover:bg-orange-600 shadow-lg shadow-orange-200 transition-all active:scale-[0.98]">
                             Proceed to Checkout
                         </button>
+                    </Link>:""    
+                    }
                         <p className="text-center text-xs text-gray-400 mt-4 italic">
                             Secure payment powered by tomato
                         </p>

@@ -3,11 +3,12 @@ import { assets } from '../../assets/assets';
 import { StoreContext } from '../../contexts/StoreContext';
 import { useDispatch } from 'react-redux';
 import { addToCart } from '../../app/userDetails';
+import { toast } from 'react-toastify';
 
 
 export const FoodItem = ({product}) => {
     const dispatch=useDispatch()
-    
+
     const [itemCount,setItemCount]=useState(0)
     
     return (
@@ -17,7 +18,14 @@ export const FoodItem = ({product}) => {
            
             <img src={assets.add_icon_white} className="absolute w-[35px] bottom-2 right-2 cursor-pointer rounded-md" onClick={()=>{
                 dispatch(addToCart(product))
-                alert('success')
+                 toast.success('Product Added!', {
+                  style: {
+                    backgroundColor: '#ff8c00', 
+                    color: '#ffffff'          
+                  },
+                  progressStyle: {
+                    background: '#ffffff'     
+                     }});
             }}/>
             
            

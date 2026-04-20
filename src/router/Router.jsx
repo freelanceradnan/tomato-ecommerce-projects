@@ -26,7 +26,9 @@ import Settings from "../components/AdminPages/Settings";
 import EditProduct from "../components/AdminPages/EditProduct";
 import AdminRoute from "../components/AdminPages/AdminRoute";
 import UserRoute from "../components/AdminPages/userRoute";
-
+import Checkout from "../pages/Checkout/Checkout";
+import FakePayment from "../pages/FakePayment/Payment";
+import OrderSuccess from "../pages/OrderSuccess/OrderSuccess";
 
 export const Router = createBrowserRouter([
   {
@@ -35,14 +37,18 @@ export const Router = createBrowserRouter([
     children: [
       // public routes
       { index: true, element: <Home /> },
+         {path:"processCheckout",element:<Checkout/>},
+         {path:"payment",element:<FakePayment/>},
+         {path:"order-success",element:<OrderSuccess/>},
       {
-  path: "cart",
-  element: (
-    <UserRoute>
-      <Cart />
-    </UserRoute>
-  )
-},
+        path: "cart",
+        element: (
+          <UserRoute>
+            <Cart />
+          </UserRoute>
+        )
+        
+      },
       { path: "signup", element: <Signup /> },
       { path: "placeOrder", element: <Placeholder /> },
 
@@ -57,8 +63,8 @@ export const Router = createBrowserRouter([
           { path: "orders", element: <Order /> },
           { path: "feedback", element: <Feedback /> },
           { path: "chatwithus", element: <Chat /> },
-          { path: "policies", element: <Policies /> }
-        ]
+          { path: "policies", element: <Policies /> },
+        ],
       },
 
       // admin routes
@@ -76,9 +82,9 @@ export const Router = createBrowserRouter([
           { path: "orderManagement", element: <Order /> },
           { path: "userManagement", element: <User /> },
           { path: "settings", element: <Settings /> },
-          { path: "inventory/edit/:id", element: <EditProduct /> }
-        ]
-      }
-    ]
-  }
+          { path: "inventory/edit/:id", element: <EditProduct /> },
+        ],
+      },
+    ],
+  },
 ]);
