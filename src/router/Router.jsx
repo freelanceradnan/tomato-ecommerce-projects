@@ -25,7 +25,7 @@ import User from "../components/AdminPages/User";
 import Settings from "../components/AdminPages/Settings";
 import EditProduct from "../components/AdminPages/EditProduct";
 import AdminRoute from "../components/AdminPages/AdminRoute";
-import UserRoute from "../components/AdminPages/userRoute";
+import UserRoute from "../components/AdminPages/UserRoute";
 import Checkout from "../pages/Checkout/Checkout";
 import FakePayment from "../pages/FakePayment/Payment";
 import OrderSuccess from "../pages/OrderSuccess/OrderSuccess";
