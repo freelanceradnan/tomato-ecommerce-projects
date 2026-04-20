@@ -4,13 +4,14 @@ import {
   XAxis, YAxis, CartesianGrid,
   Tooltip, Legend, ResponsiveContainer
 } from "recharts";
-import { useGetAllPostsQuery, useGetAllUsersQuery, useGetCategoryQuery } from "../../app/store";
+import { useGetAllPostsQuery, useGetAllUsersQuery, useGetCategoryQuery, useGetOrdersQuery } from "../../app/store";
 
 const Dashboard = () => {
     const { data: allProduct = [] } = useGetAllPostsQuery();
     const { data: allCategory = [] } = useGetCategoryQuery();
     const { data: allUsers = [] } = useGetAllUsersQuery();
-
+    const {data:orders=[]}=useGetOrdersQuery()
+    
     // This is the variable 
     const chartData = [
         { name: 'Products', count: allProduct.length },
@@ -52,7 +53,9 @@ const Dashboard = () => {
                             <h2 className="uppercase font-semibold">Orders</h2>
                             <Truck color="white" className="bg-[#94710a] p-1" />
                         </div>
-                        <div className="text-2xl font-bold">0</div>
+                        <div className="text-2xl font-bold">
+                            {orders.length}
+                        </div>
                     </div>
                 </div>
 

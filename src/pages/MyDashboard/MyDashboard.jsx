@@ -54,12 +54,12 @@ const MyDashboard = () => {
          </abbr>
          <span className='text-sm md:text-xl'> {!hiddenText && <h2 className='md:px-2'>Address Book</h2>}</span></Link></li>
           
-          <li  className={active==="wishlist"?"bg-[#FF6347]":'hover:bg-[#FF6347] text-[#CBD5E1]' } onClick={()=>isActive("wishlist")}><Link to="/myDashboard/wishlist" style={{ color: "white" }} className='flex gap-1 md:gap-2 items-center'>
+          {/* <li  className={active==="wishlist"?"bg-[#FF6347]":'hover:bg-[#FF6347] text-[#CBD5E1]' } onClick={()=>isActive("wishlist")}><Link to="/myDashboard/wishlist" style={{ color: "white" }} className='flex gap-1 md:gap-2 items-center'>
           
           <abbr title="WishList">
             <Heart />
           </abbr>
-         <span className='text-sm md:text-xl'> {!hiddenText && <h2 className='md:px-2'>Wishlist Items</h2>}</span></Link></li>
+         <span className='text-sm md:text-xl'> {!hiddenText && <h2 className='md:px-2'>Wishlist Items</h2>}</span></Link></li> */}
 
           <li className={active==="order"?"bg-[#FF6347]":'hover:bg-[#FF6347] text-[#CBD5E1]'} onClick={()=>isActive("order")}><Link to="/myDashboard/orders" style={{ color: "white" }} className='flex gap-1 md:gap-2 items-center'>
           

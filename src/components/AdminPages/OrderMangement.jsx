@@ -4,7 +4,7 @@ import React, { useContext, useEffect, useState } from 'react';
 import { auth, db } from '../../Firebase/Firebase';
 import { StoreContext } from '../../contexts/StoreContext';
 
-const Order = () => {
+const OrderMangement = () => {
     const [userOrderData, setUserOrderData] = useState([]);
     const [loading, setLoading] = useState(true);
     const { currentUser } = useContext(StoreContext);
@@ -129,4 +129,4 @@ const Order = () => {
     );
 };
 
-export default Order;
+export default OrderMangement;

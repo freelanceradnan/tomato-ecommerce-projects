@@ -136,6 +136,23 @@ export const ApiSlice=createApi({
          },
          providesTags:['users']
         }),
+        getOrders:builder.query({
+         async queryFn(){
+            try {
+            const orderRef=collection(db,'orders')
+            const snapsort=await getDocs(orderRef)
+            return{
+                data:snapsort.docs.map((doc)=>({
+                    id:doc.id,
+                    ...doc.data()
+                }))
+            }
+            } catch (error) {
+                return {error:"failed to fetch active category"}
+            }
+         }
+         
+        }),
         deleteUser: builder.mutation({
       async queryFn(id) {
         
@@ -165,4 +182,4 @@ export const ApiSlice=createApi({
         }),
     })
 })
-export const {useAddProductMutation,useUpdateProductMutation,useGetAllPostsQuery,useGetCategoryQuery,useGetProductByCategoryQuery,useGetAllUsersQuery,useGetEditPostQuery,useGetUsersQuery,useDeleteUserMutation,useUpdateUserMutation}=ApiSlice
+export const {useAddProductMutation,useUpdateProductMutation,useGetAllPostsQuery,useGetCategoryQuery,useGetProductByCategoryQuery,useGetAllUsersQuery,useGetEditPostQuery,useGetUsersQuery,useDeleteUserMutation,useUpdateUserMutation,useGetOrdersQuery}=ApiSlice

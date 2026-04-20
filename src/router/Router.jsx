@@ -29,6 +29,7 @@ import UserRoute from "../components/AdminPages/userRoute";
 import Checkout from "../pages/Checkout/Checkout";
 import FakePayment from "../pages/FakePayment/Payment";
 import OrderSuccess from "../pages/OrderSuccess/OrderSuccess";
+import OrderMangement from "../components/AdminPages/OrderMangement";
 
 export const Router = createBrowserRouter([
   {
@@ -79,7 +80,7 @@ export const Router = createBrowserRouter([
           { index: true, element: <Dashboard /> },
           { path: "inventory", element: <Inventory /> },
           { path: "addProduct", element: <AddProduct /> },
-          { path: "orderManagement", element: <Order /> },
+          { path: "orderMangement", element: <OrderMangement /> },
           { path: "userManagement", element: <User /> },
           { path: "settings", element: <Settings /> },
           { path: "inventory/edit/:id", element: <EditProduct /> },

@@ -4,9 +4,12 @@ import { CreditCard, Lock, ArrowLeft } from 'lucide-react';
 import { addDoc, collection, setDoc } from 'firebase/firestore';
 import { StoreContext } from '../../contexts/StoreContext';
 import { db } from '../../Firebase/Firebase';
+import { useDispatch } from 'react-redux';
+import { clearCart, removeToCart } from '../../app/userDetails';
 
 const FakePayment = () => {
     const navigate = useNavigate();
+    const dispatch=useDispatch()
     const [loading, setLoading] = useState(false);
    const {orderDetails}=useContext(StoreContext)
    const genarateOrderId = "SS-" + Math.floor(Math.random() * 900000 + 100000);
@@ -18,13 +21,11 @@ const FakePayment = () => {
    
     try {
         const colRef = collection(db, 'orders');
-        await addDoc(colRef, {orderId,...orderDetails});
+        await addDoc(colRef, {genarateOrderId,...orderDetails});
         setOrderId(genarateOrderId)
-     
+        await dispatch(clearCart()); 
         setLoading(false);
-        
-       
-        navigate('/order-success');
+          navigate('/order-success', { replace: true });
     } catch (error) {
         setLoading(false);
         console.error("Payment Error: ", error);
