@@ -12,7 +12,7 @@ import { toast } from 'react-toastify';
 
 const Inventory = () => {
   const [searchData,setSearchData]=useState([])
-  console.log(searchData.length)
+
   const [products, setProducts] = useState([]);
   const productRef=useRef(null)
   const {data:allProduct=[]}=useGetAllPostsQuery()

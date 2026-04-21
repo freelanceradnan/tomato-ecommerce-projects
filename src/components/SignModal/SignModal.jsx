@@ -99,6 +99,7 @@ const SubmitLogin = async (e) => {
         email:signUser.email,
         role:"user",
         name:signUser.name,
+        usedCoupon:false,
         isActive: true
       })
     }

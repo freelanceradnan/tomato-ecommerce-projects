@@ -17,7 +17,7 @@ const Dashboard = () => {
         { name: 'Products', count: allProduct.length },
         { name: 'Categories', count: allCategory.length },
         { name: 'Users', count: allUsers.length },
-        { name: 'Orders', count: 0 }
+        { name: 'Orders', count: orders.length }
     ];
 
     return (

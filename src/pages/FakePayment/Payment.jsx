@@ -1,9 +1,9 @@
 import React, { useContext, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { CreditCard, Lock, ArrowLeft } from 'lucide-react';
-import { addDoc, collection, setDoc } from 'firebase/firestore';
+import { addDoc, collection, doc, setDoc, updateDoc } from 'firebase/firestore';
 import { StoreContext } from '../../contexts/StoreContext';
-import { db } from '../../Firebase/Firebase';
+import { auth, db } from '../../Firebase/Firebase';
 import { useDispatch } from 'react-redux';
 import { clearCart, removeToCart } from '../../app/userDetails';
 
@@ -14,7 +14,9 @@ const FakePayment = () => {
    const {orderDetails}=useContext(StoreContext)
    const genarateOrderId = "SS-" + Math.floor(Math.random() * 900000 + 100000);
     const { orderId,setOrderId}=useContext(StoreContext)
-
+   const {currentUser}=useContext(StoreContext)
+   const {doneCoupon,setDoneCoupon}=useContext(StoreContext)
+   
    const handlePayment = async (e) => {
     e.preventDefault();
     setLoading(true);
@@ -22,9 +24,23 @@ const FakePayment = () => {
     try {
         const colRef = collection(db, 'orders');
         await addDoc(colRef, {genarateOrderId,...orderDetails});
+        
         setOrderId(genarateOrderId)
         await dispatch(clearCart()); 
         setLoading(false);
+
+    if (doneCoupon === true) {
+        if (currentUser?.uid) {
+            const userRef = doc(db, "users", currentUser.uid);
+            await updateDoc(userRef, {
+                usedCoupon: true
+            });
+            console.log("User coupon status updated!");
+        } else {
+            console.error("User ID not found!");
+        }
+    
+        }
           navigate('/order-success', { replace: true });
     } catch (error) {
         setLoading(false);

@@ -125,9 +125,11 @@ const singSubmit = async (e) => {
     if (user) {
       // Use 'user.uid' instead of 'auth.currentUser.uid' (safer)
       await setDoc(doc(db, 'users', user.uid), {
-        email: user.email, // Use the email from the auth response
-        role: "user",
-        name:signUser.name
+        email:signUser.email,
+        role:"user",
+        name:signUser.name,
+        usedCoupon:false,
+        isActive: true
       });
     }
 
