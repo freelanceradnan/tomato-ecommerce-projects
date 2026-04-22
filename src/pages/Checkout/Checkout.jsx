@@ -26,7 +26,8 @@ const Checkout = () => {
     const [actionUser,setActionUser]=useState([])
     // const actionUser=alluser?.find((c)=>c.email==currentUser?.email)
     const {doneCoupon,setDoneCoupon}=useContext(StoreContext)
-
+    
+    
     const [orderInfo, setOrderInfo] = useState({
         firstName: "",
         lastName: "",
@@ -249,9 +250,11 @@ const ChangeCuponHandler=async(e)=>{
                                     </div>
                                 </div>
 
+                                {cart.length===0?"":
                                 <button type="submit" className="w-full bg-black text-white py-5 rounded-2xl font-black text-lg mt-8 hover:bg-orange-600 transition-all shadow-lg uppercase tracking-tighter">
                                     Proceed to Payment
                                 </button>
+                                }
 
                                 <div className="grid grid-cols-3 gap-2 mt-8 border-t pt-8">
                                     <div className="flex flex-col items-center text-center">
