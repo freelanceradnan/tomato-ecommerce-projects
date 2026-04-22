@@ -3,12 +3,16 @@ import { collection, getDocs } from 'firebase/firestore';
 import React, { useContext, useEffect, useState } from 'react';
 import { auth, db } from '../../Firebase/Firebase';
 import { StoreContext } from '../../contexts/StoreContext';
+import { useNavigate } from 'react-router';
+import { Link } from 'react-router-dom';
+import { Download } from 'lucide-react';
 
 const Order = () => {
     const [userOrderData, setUserOrderData] = useState([]);
     const [loading, setLoading] = useState(true);
     const { currentUser } = useContext(StoreContext);
-
+    const {setOrderDescription}=useContext(StoreContext)
+    const navigate=useNavigate()
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, async (user) => {
             if (user) {
@@ -58,6 +62,7 @@ const Order = () => {
                                 <th className="px-6 py-4 font-semibold">Order Number</th>
                                 <th className="px-6 py-4 font-semibold">Total</th>
                                 <th className="px-6 py-4 font-semibold">Status</th>
+                                <th className="px-6 py-4 font-semibold">Invoice</th>
                             </tr>
                         </thead>
                         <tbody className="divide-y divide-gray-100">
@@ -80,6 +85,13 @@ const Order = () => {
                                             {order.status || 'Processing'}
                                         </span>
                                     </td>
+                                    <td className="px-6 py-4 font-bold text-blue-600"><Link 
+  to="/invoice" 
+  state={{ order: order }} 
+  className="p-2 bg-slate-100 rounded-lg hover:bg-slate-200"
+>
+  <Download size={16} />
+</Link></td>
                                 </tr>
                             ))}
                         </tbody>
@@ -114,7 +126,15 @@ const Order = () => {
                             <div className="flex justify-between items-center pt-3 border-t border-gray-50">
                                 <span className="text-sm text-gray-500">{order.date}</span>
                                 <span className="text-lg font-black text-blue-600">${order.totalPrice}</span>
+                                
                             </div>
+                            <div><Link 
+  to="/invoice" 
+  state={{ order: order }} 
+  className="p-2 bg-slate-100 rounded-lg hover:bg-slate-200"
+>
+  <Download size={16} />
+</Link></div>
                         </div>
                     ))}
                 </div>

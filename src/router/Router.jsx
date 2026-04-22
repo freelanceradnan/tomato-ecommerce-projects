@@ -30,6 +30,8 @@ import Checkout from "../pages/Checkout/Checkout";
 import FakePayment from "../pages/FakePayment/Payment";
 import OrderSuccess from "../pages/OrderSuccess/OrderSuccess";
 import OrderMangement from "../components/AdminPages/OrderMangement";
+import Invoice from "../pages/InvoiceDownload/Invoice";
+import InvoicePage from "../pages/InvoicePage/Invoicepage";
 
 const Router = createBrowserRouter([
   {
@@ -41,6 +43,7 @@ const Router = createBrowserRouter([
          {path:"processCheckout",element:<Checkout/>},
          {path:"payment",element:<FakePayment/>},
          {path:"order-success",element:<OrderSuccess/>},
+         {path:"invoice",element:<InvoicePage/>},
       {
         path: "cart",
         element: (

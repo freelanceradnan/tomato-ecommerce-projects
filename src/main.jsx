@@ -9,7 +9,9 @@ import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { Provider } from 'react-redux';
 import { store } from './Feature/store';
+// import App from './pages/InvoiceDownload/Invoice.jsx';
 createRoot(document.getElementById('root')).render(
+
    <Provider store={store}>
     <StoreContextProvider>
      <ToastContainer 

@@ -12,6 +12,8 @@ export const StoreContextProvider = ({ children }) => {
   const [role, setRole] = useState(null);
   const [orderDetails,setOrderDetails]=useState({})
   const [orderId,setOrderId]=useState("")
+  const [OrderDescription,setOrderDescription]=useState({})
+  console.log(OrderDescription)
   const [doneCoupon,setDoneCoupon]=useState(false)
   const resetAuth = () => {
     setCurrentUser(null);
@@ -67,7 +69,8 @@ export const StoreContextProvider = ({ children }) => {
         orderDetails,
         setOrderDetails,
         orderId,setOrderId,
-        doneCoupon,setDoneCoupon
+        doneCoupon,setDoneCoupon,
+        setOrderDescription,OrderDescription
       }}
     >
       {children}

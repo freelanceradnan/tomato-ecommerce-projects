@@ -1,14 +1,12 @@
 import React, { useContext } from 'react';
 import { Link } from 'react-router-dom';
-import { CheckCircle, Package, ArrowRight } from 'lucide-react';
+import { CheckCircle, Package, ArrowRight, Download } from 'lucide-react';
 import { StoreContext } from '../../contexts/StoreContext';
 
 const OrderSuccess = () => {
-    const {orderDetails}=useContext(StoreContext)
-    const { orderId,setOrderId}=useContext(StoreContext)
-    const {currentUser}=useContext(StoreContext)
-    
-    
+    // Context থেকে ডাটা নিচ্ছি
+    const { orderDetails, orderId, currentUser } = useContext(StoreContext);
+
     return (
         <div className="min-h-screen bg-white flex items-center justify-center p-6 text-center">
             <div className="max-w-lg w-full">
@@ -32,12 +30,22 @@ const OrderSuccess = () => {
                     </div>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                     <Link to="/myDashboard/orders" className="flex items-center justify-center gap-2 bg-gray-100 text-black py-4 rounded-2xl font-bold hover:bg-gray-200 transition">
                         <Package size={20} /> View Orders
                     </Link>
-                    <Link to="/" className="flex items-center justify-center gap-2 bg-black text-white py-4 rounded-2xl font-bold hover:bg-orange-600 transition">
-                        Continue Shopping <ArrowRight size={20} />
+
+                    
+                    <Link 
+                        to="/invoice" 
+                        state={{ order: { ...orderDetails, id: orderId } }} 
+                        className="flex items-center justify-center gap-1 bg-gray-100 text-black py-4 rounded-2xl font-bold hover:bg-gray-200 transition"
+                    >
+                        <Download size={20} /> Invoice
+                    </Link>
+
+                    <Link to="/" className="flex items-center justify-center gap-1 bg-black text-white py-4 rounded-2xl font-bold hover:bg-orange-600 transition">
+                        Shop <ArrowRight size={20} />
                     </Link>
                 </div>
 
