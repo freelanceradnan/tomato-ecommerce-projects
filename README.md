@@ -24,7 +24,7 @@ Project description-->>>
 
 ১. রিপোজিটরি ক্লোন করুন:
 bash
-git clone https://github.com/your-username/project-name.git
+git clone (https://github.com/freelanceradnan/tomato-ecommerce-projects.git)
 
 
 ২. ডিপেন্ডেন্সি ইন্সটল করুন:
