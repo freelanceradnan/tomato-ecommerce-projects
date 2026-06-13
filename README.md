@@ -1,4 +1,4 @@
-# 🚀 Project Name
+# 🚀Tomato Ecommerce Projects
 
 [![Framework](https://img.shields.io/badge/Framework-React-blue)](https://reactjs.org/)
 [![Styling](https://img.shields.io/badge/Styling-Tailwind_CSS-38B2AC)](https://tailwindcss.com/)
